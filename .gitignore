@@ -1,6 +1,4 @@
 .vscode/
 __pycache__/
-data/dset/dem
-data/dset/truth
-data/dset/scene
+data/dset
 data/result/

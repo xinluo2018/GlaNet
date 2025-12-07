@@ -1,5 +1,6 @@
 ## author: xin luo
 ## create: 2025.6.18
+## modify: 2025.12.07
 ## des: accuracy metric of oa(overall accuracy), miou
 
 import torch
@@ -7,7 +8,9 @@ import torch
 def oa_binary(pred, truth, device='cpu'):
     ''' des: calculate overall accuracy (2-class classification) for each batch
         input: 
-            pred(4D tensor), and truth(4D tensor)
+            pred: (4D tensor) 
+            truth: (4D tensor)
+            device: 'cpu' or 'cuda'
     '''
     pred, truth = pred.to(device), truth.to(device)
     pred_bi = torch.where(pred>0.5, 
@@ -21,12 +24,14 @@ def oa_binary(pred, truth, device='cpu'):
     oa = oa.mean()
     return oa
 
-def miou_binary(pred, truth):
+def miou_binary(pred, truth, device='cpu'):
     ''' des: calculate miou (2-class classification) for each batch
         input: 
-            pred(4D tensor), and truth(4D tensor)
+            pred: (4D tensor) 
+            truth: (4D tensor)
+            device: 'cpu' or 'cuda'
     '''
-    pred, truth = pred.cpu(), truth.cpu()
+    pred, truth = pred.to(device), truth.to(device)
     pred_bi = torch.where(pred>0.5, 
                           torch.ones(pred.shape, device=pred.device),
                           torch.zeros(pred.shape, device=pred.device))

@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def imgShow(img, ax=None, extent=None, color_bands=(2,1,0), clip_percent=2, per_band_clip=False):
+def imgShow(img, 
+            ax=None, 
+            extent=None, 
+            color_bands=(2,1,0), 
+            clip_percent=2, 
+            per_band_clip=False):
     '''
     Description: show the single image.
     args:
@@ -55,11 +60,17 @@ def imgShow(img, ax=None, extent=None, color_bands=(2,1,0), clip_percent=2, per_
         else: plt.imshow(np.clip(img_color_clip, 0, 1), extent=extent, vmin=0, vmax=1)
 
 
-def imsShow(img_list, img_name_list, clip_list=None, figsize=(8,4),\
-                            color_bands_list=None, axis=True, row=None, col=None):
+def imsShow(img_list, 
+            img_name_list, 
+            clip_list=None, 
+            figsize=(8,4),
+            color_bands_list=None, 
+            axis=True, 
+            row=None, 
+            col=None):
     ''' des: visualize multiple images.
         input: 
-            img_list: containes all images
+            img_list: containes all images, 
             img_names_list: image names corresponding to the images
             clip_list: percent clips (histogram) corresponding to the images
             color_bands_list: color bands combination corresponding to the images
