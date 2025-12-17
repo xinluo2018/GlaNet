@@ -19,10 +19,10 @@ class RandomCrop:
         self.size = size
     def __call__(self, image, truth):
         '''size: (height, width)'''
-        start_h = random.randint(0, truth.shape[0]-self.size[0])
-        start_w = random.randint(0, truth.shape[1]-self.size[1])
-        patch = image[:,start_h:start_h+self.size[0],start_w:start_w+self.size[1]]
-        truth = truth[start_h:start_h+self.size[0], start_w:start_w+self.size[1]]
+        start_row = random.randint(0, truth.shape[0]-self.size[0])
+        start_col = random.randint(0, truth.shape[1]-self.size[1])
+        patch = image[:,start_row:start_row+self.size[0],start_col:start_col+self.size[1]]
+        truth = truth[start_row:start_row+self.size[0], start_col:start_col+self.size[1]]
         return patch, truth
 
 ### - Dataset definition
@@ -89,14 +89,13 @@ class SceneArraySet(torch.utils.data.Dataset):
         return len(self.scenes_arr)
 
 ### - Dataset definition
-class PatchSet(torch.utils.data.Dataset):
+class PatchPathSet(torch.utils.data.Dataset):
     def __init__(self, paths_valset):
         self.paths_valset = paths_valset
     def __getitem__(self, idx):
         ## load valset patch, patch: (H, W, C)
-        patch_pdem_ptruth = torch.load(self.paths_valset[idx], weights_only=True) 
-        patch_pdem = patch_pdem_ptruth.permute(2,0,1)[0:7]  
-        ptruth = patch_pdem_ptruth.permute(2,0,1)[7:]  # (1, H, W)
-        return patch_pdem, ptruth
+        patch_ptruth = torch.load(self.paths_valset[idx], weights_only=True) 
+        patch_ptruth = patch_ptruth.permute(2,0,1)  # (C, H, W)
+        return patch_ptruth[0:-1], patch_ptruth[-1:]
     def __len__(self):
         return len(self.paths_valset)

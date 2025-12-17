@@ -3,8 +3,33 @@ author: xin luo,
 created: 2025.11.30
 des: configuration file
 '''
+from glob import glob
+## directories/files
+dir_scene = 'data/dset/scene/'
+dir_dem = 'data/dset/dem/' 
+dir_truth = 'data/dset/truth/' 
+dir_result = 'data/result/'
+paths_truth = sorted(glob('data/dset/truth/*.tif'))
+paths_truth_vec = sorted(glob('data/dset/truth/*.gpkg'))
+paths_scene = [path.replace('truth','scene') for path in paths_truth]
+paths_dem = [path.replace('.tif', '_dem.tif').replace('truth','dem') 
+                                    for path in paths_truth]
 
-### max and min values for different satellites' scenes (obtained from notebooks/2_dset_check.ipynb)
+## training/validation split
+ids_scene = [path.split('/')[-1].split('.')[0] for path in paths_truth_vec] 
+ids_scene_val = ids_scene[::4]  ## every 4th scene for validation
+ids_scene_tra = sorted(list(set(ids_scene) - set(ids_scene_val)))
+## traset
+paths_scene_tra = [dir_scene+id+'_nor.tif' for id in ids_scene_tra]
+paths_dem_tra = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_tra]
+paths_truth_tra = [dir_truth+id+'.tif' for id in ids_scene_tra] 
+## valset(scene)
+paths_scene_val = [dir_scene+id+'_nor.tif' for id in ids_scene_val]
+paths_dem_val = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_val]
+paths_truth_val = [dir_truth+id+'.tif' for id in ids_scene_val] 
+paths_truth_vec_val = [dir_truth+id+'.gpkg' for id in ids_scene_val] 
+
+## max and min values for different satellites' scenes (obtained from notebooks/2_dset_check.ipynb)
 max_scenes = {'l5': 65454.0, 
               'l7': 56297.0, 
               'l8': 65439.0, 

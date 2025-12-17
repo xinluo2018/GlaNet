@@ -72,7 +72,6 @@ def stack_imgs(src1, src2, intersect=False):
       out_transform: the geographic transformation for the output image 
     """
 
-
     if intersect:
         # use the union of the bounding boxes
         bounds = BoundingBox(

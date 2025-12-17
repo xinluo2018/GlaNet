@@ -20,7 +20,8 @@ def read_scenes(scene_paths, truth_paths, dem_paths):
           truth_arr = truth_src.read(1)  # (H, W)
       ## 2. read dem
       with rio.open(dem_path) as dem_src:
-          dem_arr = dem_src.read(1)  # (H, W)
+          dem_arr = dem_src.read(1)   # (H, W)
+          
       dem_arr = dem_arr[:, :, np.newaxis]  # expand to (H, W, 1)
       scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
       scenes_arr.append(scene_arr)

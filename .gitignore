@@ -2,3 +2,4 @@
 __pycache__/
 data/dset
 data/result/
+model/trained/
