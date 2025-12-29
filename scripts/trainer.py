@@ -19,7 +19,7 @@ from utils.dataloader import SceneArraySet, PatchPathSet
 from model.deeplabv3plus_mobilev2 import deeplabv3plus_mobilev2
 
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0')
 torch.manual_seed(999)   # make the training replicable
 
 '''------train step------'''
@@ -91,8 +91,9 @@ def train_loops(model, loss_fn, optimizer, tra_loader,
         tra_loss_loops.append(tra_loss); tra_oa_loops.append(tra_oa); tra_miou_loops.append(tra_miou)
         val_loss_loops.append(val_loss); val_oa_loops.append(val_oa); val_miou_loops.append(val_miou)
 
-        format = 'Ep{}: Tra-> Loss:{:.3f},Oa:{:.3f},Miou:{:.3f}, Val-> Loss:{:.3f},Oa:{:.3f},Miou:{:.3f},Time:{:.1f}s'
-        print(format.format(epoch+1, tra_loss, tra_oa, tra_miou, val_loss, val_oa, val_miou, time.time()-start))
+        print(f'Ep{epoch+1}: tra-> Loss:{tra_loss:.3f},Oa:{tra_oa:.3f},Miou:{tra_miou:.3f}, '
+                f'val-> Loss:{val_loss:.3f},Oa:{val_oa:.3f}, Miou:{val_miou:.3f},time:{time.time()-start:.1f}s')
+
 
     metrics = {'tra_loss':tra_loss_loops, 'tra_oa':tra_oa_loops, 'tra_miou':tra_miou_loops, 'val_loss': val_loss_loops, 'val_oa': val_oa_loops, 'val_miou': val_miou_loops}
     return metrics
@@ -104,8 +105,10 @@ if __name__ == '__main__':
       model = unet(num_bands=config_tra.num_bands).to(device)
     elif config_tra.model_name == 'deeplabv3plus':
       model = deeplabv3plus(num_bands=config_tra.num_bands).to(device)
-    elif config_tra.model_name == 'deeplabv3plus_mobilev2':
+    elif config_tra.model_name == 'deeplabv3plus_mb2':
       model = deeplabv3plus_mobilev2(num_bands=config_tra.num_bands).to(device) 
+    else: 
+      raise ValueError('Model name not recognized. Please check the config_tra.py file.')
     print('Model name:', config_tra.model_name)
 
     ## Data paths 
@@ -132,7 +135,9 @@ if __name__ == '__main__':
                                              num_workers=config_tra.num_dataloader_worker,
                                              shuffle=True)
     val_loader = torch.utils.data.DataLoader(val_dset, 
-                                             batch_size=config_tra.batch_size_val)
+                                             batch_size=config_tra.batch_size_val,
+                                             num_workers=config_tra.num_dataloader_worker,
+                                             shuffle=False)
 
     ''' -------- 2. Model loading and training strategy ------- '''
     optimizer = torch.optim.Adam(model.parameters(), lr=config_tra.lr)

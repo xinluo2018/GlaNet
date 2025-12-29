@@ -49,5 +49,5 @@ class unet(nn.Module):
         x2_up = torch.cat([self.up(x2_up), x1], dim=1)  # (48+16)x128x128
         x1_up = self.up_conv3(x2_up)    # 32x128x128
         x1_up = self.up(x1_up)        # 32x256x256
-        logits = self.outp(x1_up)
-        return logits          
+        prob = self.outp(x1_up)
+        return prob          

@@ -77,5 +77,5 @@ class u2net(nn.Module):
         x2_up = torch.cat([self.up(x2_up), x1_b1, x1_b2], dim=1)   # 64+16+16
         x1_up = self.up_conv3(x2_up)        #  32
         x1_up = self.up(x1_up)              #  
-        logits = self.outp(x1_up)           # 1
-        return logits          
+        prob = self.outp(x1_up)           # 1
+        return prob          

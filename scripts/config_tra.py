@@ -9,10 +9,10 @@ import torch.nn as nn
 from glob import glob
 
 #### ------------- Model -------------
-model_name = 'deeplabv3plus'  ### option: unet, deeplabv3plus, deeplabv3plus_mobilev2
+model_name = 'deeplabv3plus_mb2'   ### option: unet, deeplabv3plus, deeplabv3plus_mb2(deeplabv3plus_mobilev2)
 num_dataloader_worker = 10
 #### ------------- Training parameters -------------
-patch_size = 768    ###  
+patch_size = 512     ###  
 num_epoch = 200
 
 lr = 0.0005                   ## if use lr_scheduler;
@@ -20,8 +20,8 @@ batch_size_tra = 4            ##
 batch_size_val = 4            ## 
 loss_bce = nn.BCELoss()       ## selected for binary classification
 ### --- path to save
-path_weights_save = 'model/trained/patch_' + str(patch_size) + '/' + model_name+'_weights.pth'
-path_metrics_save = 'model/trained/patch_' + str(patch_size) + '/' + model_name + '_metrics.csv'
+path_weights_save = f'model/trained/{model_name}_{patch_size}/{model_name}_weights_2.pth'
+path_metrics_save = f'model/trained/{model_name}_{patch_size}/{model_name}_metrics_2.csv'
 ### --- number of bands of the image.
 num_bands = 7
 
@@ -42,10 +42,11 @@ ids_scene_tra = sorted(list(set(ids_scene) - set(ids_scene_val)))
 ## traset
 paths_scene_tra = [dir_scene+id+'_nor.tif' for id in ids_scene_tra]
 paths_dem_tra = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_tra]
+# paths_dem_tra = [dir_dem+id+'_dem_adjust_nor.tif' for id in ids_scene_tra]
 paths_truth_tra = [dir_truth+id+'.tif' for id in ids_scene_tra] 
 ## valset
 dir_valset = 'data/dset/valset/patch_'+str(patch_size)
-
+# dir_valset = f'data/dset/valset/patch_{str(patch_size)}_dem_adjust'
 
 
 # ## ------------- Data tranform/augmentation -------------

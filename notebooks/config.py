@@ -21,13 +21,15 @@ ids_scene_val = ids_scene[::4]  ## every 4th scene for validation
 ids_scene_tra = sorted(list(set(ids_scene) - set(ids_scene_val)))
 ## traset
 paths_scene_tra = [dir_scene+id+'_nor.tif' for id in ids_scene_tra]
-paths_dem_tra = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_tra]
 paths_truth_tra = [dir_truth+id+'.tif' for id in ids_scene_tra] 
+paths_dem_tra = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_tra]
+paths_dem_adjust_tra = [dir_dem+id+'_dem_adjust_nor.tif' for id in ids_scene_tra]
 ## valset(scene)
 paths_scene_val = [dir_scene+id+'_nor.tif' for id in ids_scene_val]
-paths_dem_val = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_val]
 paths_truth_val = [dir_truth+id+'.tif' for id in ids_scene_val] 
 paths_truth_vec_val = [dir_truth+id+'.gpkg' for id in ids_scene_val] 
+paths_dem_val = [dir_dem+id+'_dem_nor.tif' for id in ids_scene_val]
+paths_dem_adjust_val = [dir_dem+id+'_dem_adjust_nor.tif' for id in ids_scene_val]
 
 ## max and min values for different satellites' scenes (obtained from notebooks/2_dset_check.ipynb)
 max_scenes = {'l5': 65454.0, 
@@ -43,4 +45,6 @@ min_scenes = {'l5': 4891.0,
 
 max_dem = 8848.0  # highest point on Earth: Mount Everest
 min_dem = -420.0  # lowest point on Earth: Dead Sea Shore 
+
+
 
