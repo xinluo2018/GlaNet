@@ -121,6 +121,7 @@ class PatchPathSet_2(torch.utils.data.Dataset):
         ## load valset patch, patch: (H, W, C)
         patch_ptruth = torch.load(self.paths_valset[idx], weights_only=True) 
         patch, ptruth = patch_ptruth[...,0:-1], patch_ptruth[...,-1:]        
+        ## crop inner 256x256 for validation
         if ptruth.shape[0]>256:
             crop_start = (patch.shape[0]-256)//2
             ptruth = ptruth[crop_start:crop_start+256, 

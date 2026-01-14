@@ -7,8 +7,8 @@ Dataset for model training is introduced at: https://github.com/Hydrological-Obs
 
 
 ## to do  
-1. train and test the unet, unet++, deeplabv3+.  
-2. plot accuracy among the methods.
+2. comparing with the unet, unet++, deeplabv3+, and another semantic segmentation models.        
+1. plot accuracy among the methods.     
 
 
 
