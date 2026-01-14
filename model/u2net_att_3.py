@@ -1,7 +1,7 @@
 '''
 author: xin luo
 create: 2026.1.9  
-des: a dual branch U-Net model with attention mechanism (fixed decoder fusion)
+des: a dual branch U-Net model with attention mechanism
 '''
 
 
@@ -60,28 +60,40 @@ class CBAMBlock(nn.Module):
         self.sa=SpatialAttention(kernel_size=kernel_size)
 
     def forward(self, x):
+        b, c, _, _ = x.size()
         residual=x
         out=x*self.ca(x)
         out=out*self.sa(out)
         return out+residual    ## residual connection
 
-class FusionAttention(nn.Module):
-    def __init__(self, in_channels):
+class CrossAttentionFusion(nn.Module):
+    def __init__(self, s2_ch, dem_ch, out_ch):
         super().__init__()
-        # 学习三个输入的空间权重（按通道共享）
-        self.conv = nn.Sequential(
-            nn.Conv2d(in_channels, max(4, in_channels // 2), 1),
-            nn.ReLU(),
-            nn.Conv2d(max(4, in_channels // 2), 3, 1), # 输出三个权重的通道
-            nn.Softmax(dim=1)
-        )
+        self.query = nn.Conv2d(s2_ch, out_ch, kernel_size=1)
+        self.key   = nn.Conv2d(dem_ch, out_ch, kernel_size=1)
+        self.value = nn.Conv2d(dem_ch, out_ch, kernel_size=1)
+        
+        self.softmax = nn.Softmax(dim=-1)
+        self.scale = out_ch ** -0.5
 
-    def forward(self, b1, b2, b3):
-        # b1/b2/b3: (B,C,H,W) — 通道数应相同 for each input
-        cat_feat = torch.cat([b1, b2, b3], dim=1)
-        weights = self.conv(cat_feat)  # (B,3,H,W)
-        out = b1 * weights[:, 0:1, :, :] + b2 * weights[:, 1:2, :, :] + b3 * weights[:, 2:3, :, :]
-        return out
+    def forward(self, x_s2, x_dem):
+        b, c, h, w = x_s2.size()
+        
+        # 1. 生成 Q, K, V 并展平
+        q = self.query(x_s2).view(b, -1, h * w)  # [B, C, N]
+        k = self.key(x_dem).view(b, -1, h * w).permute(0, 2, 1)  # [B, N, C]
+        v = self.value(x_dem).view(b, -1, h * w)  # [B, C, N]
+        
+        # 2. 计算交叉注意力图 (S2 vs DEM)
+        # 这一步在问：S2的光谱像素与DEM的哪些地形位置最匹配？
+        attn = self.softmax(torch.bmm(k, q) * self.scale)  # [B, N, N]
+        
+        # 3. 用注意力图加权 DEM 的 Value
+        out = torch.bmm(v, attn).view(b, -1, h, w)
+        
+        # 4. 与原始 S2 特征融合
+        return out + x_s2
+
 
 class u2net_att_3(nn.Module):
     def __init__(self, num_bands_b1, num_bands_b2):
@@ -92,39 +104,43 @@ class u2net_att_3(nn.Module):
         super(u2net_att_3, self).__init__()
         self.num_bands_b1 = num_bands_b1
         self.num_bands_b2 = num_bands_b2
-        self.att_1 = CBAMBlock(channel=32, reduction=4, kernel_size=7)
-        self.att_2 = CBAMBlock(channel=64, reduction=4, kernel_size=7)
-        self.att_3 = CBAMBlock(channel=128, reduction=4, kernel_size=7)
+        self.att_1_b1 = CBAMBlock(channel=32, reduction=4, kernel_size=7)
+        self.att_2_b1 = CBAMBlock(channel=32, reduction=4, kernel_size=7)
+        self.att_3_b1 = CBAMBlock(channel=64, reduction=4, kernel_size=7)
         self.att_4_b1 = CBAMBlock(channel=128, reduction=4, kernel_size=7)
+
+        self.att_1_b2 = CBAMBlock(channel=32, reduction=4, kernel_size=7)
+        self.att_2_b2 = CBAMBlock(channel=32, reduction=4, kernel_size=7)
+        self.att_3_b2 = CBAMBlock(channel=64, reduction=4, kernel_size=7)
         self.att_4_b2 = CBAMBlock(channel=128, reduction=4, kernel_size=7)
 
-        self.fusion_att_1 = FusionAttention(in_channels=32+32+32)   # 32*3
-        self.fusion_att_2 = FusionAttention(in_channels=64+64+64)    # 64*3
-        self.fusion_att_3 = FusionAttention(in_channels=128+128+128) # 128*3
-        
+        self.cross_att_3 = CrossAttentionFusion(s2_ch=64, dem_ch=64, out_ch=64)
+        self.cross_att_2 = CrossAttentionFusion(s2_ch=32, dem_ch=32, out_ch=32)
+        self.cross_att_1 = CrossAttentionFusion(s2_ch=32, dem_ch=32, out_ch=32)
+
         self.up = nn.Upsample(scale_factor=2, mode='nearest')  # upsample layer
         ## encoder part
         ### branch 1
-        self.down_conv1_b1 = conv3x3_bn_relu(self.num_bands_b1, 16)        
-        self.down_conv2_b1 = conv3x3_bn_relu(16, 32)
+        self.down_conv1_b1 = conv3x3_bn_relu(self.num_bands_b1, 32)        
+        self.down_conv2_b1 = conv3x3_bn_relu(32, 32)
         self.down_conv3_b1 = conv3x3_bn_relu(32, 64)
         self.down_conv4_b1 = conv3x3_bn_relu(64, 128)
         ### branch 2
-        self.down_conv1_b2 = conv3x3_bn_relu(self.num_bands_b2, 16)
-        self.down_conv2_b2 = conv3x3_bn_relu(16, 32)
+        self.down_conv1_b2 = conv3x3_bn_relu(self.num_bands_b2, 32)
+        self.down_conv2_b2 = conv3x3_bn_relu(32, 32)
         self.down_conv3_b2 = conv3x3_bn_relu(32, 64)
         self.down_conv4_b2 = conv3x3_bn_relu(64, 128)
-        ## decoder part (adjusted channel sizes to match fusion outputs)
-        self.up_conv1 = conv3x3_bn_relu(128, 64)   # fused level3 -> reduce to 64
-        self.up_conv2 = conv3x3_bn_relu(128, 64)   # concat 64+64 -> 128 -> reduce to 64
-        self.up_conv3 = conv3x3_bn_relu(96, 32)    # concat 64+32 -> 96 -> reduce to 32
+        ## decoder part (fused features)
+        self.up_conv1 = conv3x3_bn_relu(320, 64)  # in: 128+128+64 = 320
+        self.up_conv2 = conv3x3_bn_relu(96, 64)   # in: 64+32
+        self.up_conv3 = conv3x3_bn_relu(96, 64)   # in: 64+32
         
         self.outp = nn.Sequential(
-                        nn.Conv2d(32, 1, kernel_size=3, padding=1),
+                        nn.Conv2d(64, 1, kernel_size=3, padding=1),
                         nn.Sigmoid()
                         ) 
 
-    def forward(self, x):       ## input size: (B, num_bands_b1+num_bands_b2, H, W)
+    def forward(self, x):       ## input size: 7x256x256
         '''
         x: input tensor
         '''
@@ -132,65 +148,48 @@ class u2net_att_3(nn.Module):
         ## encoder part
         ### branch 1 (scene image)
         x1_b1 = self.down_conv1_b1(x_b1)                 
-        x1_b1 = F.avg_pool2d(input=x1_b1, kernel_size=2) #  size: H/2
+        x1_b1 = F.avg_pool2d(input=x1_b1, kernel_size=2) #  size: 1/2
         x2_b1 = self.down_conv2_b1(x1_b1)               
-        x2_b1 = F.avg_pool2d(input=x2_b1, kernel_size=2) #  size: H/4
+        x2_b1 = F.avg_pool2d(input=x2_b1, kernel_size=2) #  size: 1/4
         x3_b1 = self.down_conv3_b1(x2_b1)               
-        x3_b1 = F.avg_pool2d(input=x3_b1, kernel_size=2) #  size: H/8
+        x3_b1 = F.avg_pool2d(input=x3_b1, kernel_size=2) #  size: 1/8
         x4_b1 = self.down_conv4_b1(x3_b1)              
-        x4_b1 = F.avg_pool2d(input=x4_b1, kernel_size=2) #  size: H/16
-        x4_b1 = self.att_4_b1(x4_b1)
+        x4_b1 = F.avg_pool2d(input=x4_b1, kernel_size=2) #  size: 1/16
+        x4_att_b1 = self.att_4_b1(x4_b1)  # 128 
 
         ### branch 2 (DEM)
         x1_b2 = self.down_conv1_b2(x_b2)              
-        x1_b2 = F.avg_pool2d(input=x1_b2, kernel_size=2)  #  size: H/2
+        x1_b2 = F.avg_pool2d(input=x1_b2, kernel_size=2)  #  size: 1/2
         x2_b2 = self.down_conv2_b2(x1_b2)              
-        x2_b2 = F.avg_pool2d(input=x2_b2, kernel_size=2) #  size: H/4 
+        x2_b2 = F.avg_pool2d(input=x2_b2, kernel_size=2) #  size: 1/4 
         x3_b2 = self.down_conv3_b2(x2_b2)              
-        x3_b2 = F.avg_pool2d(input=x3_b2, kernel_size=2) #  size: H/8
+        x3_b2 = F.avg_pool2d(input=x3_b2, kernel_size=2) #  size: 1/8
         x4_b2 = self.down_conv4_b2(x3_b2)              
-        x4_b2 = F.avg_pool2d(input=x4_b2, kernel_size=2) #  size: H/16
-        x4_b2 = self.att_4_b2(x4_b2)
-        ## apply attention on concatenated per-level features (channel dims match att blocks)
-        # level3 (deep-middle): concat x3_b1 (64) + x3_b2 (64) -> 128
-        x3_cat = torch.cat([x3_b1, x3_b2], dim=1)
-        x3_att = self.att_3(x3_cat)  # 128
+        x4_b2 = F.avg_pool2d(input=x4_b2, kernel_size=2) #  size: 1/16
+        x4_att_b2 = self.att_4_b2(x4_b2)   ## 128
+        
+        ## decoder part
+        # x3_att_b1 = self.att_3_b1(x3_b1)  # 64 
+        # x3_att_b2 = self.att_3_b2(x3_b2)  # 64 
+        x3_fuse_att = self.cross_att_3(x3_b1, x3_b2)  # 64
 
-        # fuse level4-up -> level3 context using: up(x4_b1), up(x4_b2), x3_att
-        up4_b1 = self.up(x4_b1)  # H/8, C=128
-        up4_b2 = self.up(x4_b2)  # H/8, C=128
-        fused3 = self.fusion_att_3(up4_b1, up4_b2, x3_att)  # output C=128
-        x3_up = self.up_conv1(fused3)   # -> 64 ch
+        x3_up = torch.cat([self.up(x4_b1), self.up(x4_b2), 
+                                    x3_fuse_att], dim=1)  # 128+128+64
+        x3_up = self.up_conv1(x3_up)     # 64    
 
-        # level2 attention: concat x2_b1 (32) + x2_b2 (32) -> 64
-        x2_cat = torch.cat([x2_b1, x2_b2], dim=1)
-        x2_att = self.att_2(x2_cat)  # 64
+        # x2_att_b1 = self.att_2_b1(x2_b1)  # 32
+        # x2_att_b2 = self.att_2_b2(x2_b2)  # 32
+        x2_fuse_att = self.cross_att_2(x2_b1, x2_b2)  # 32
+        x2_up = torch.cat([self.up(x3_up), x2_fuse_att], dim=1)   # 64+32
+        x2_up = self.up_conv2(x2_up)    # 64
 
-        # produce fused level2 from up(x3_b1), up(x3_b2), x2_att
-        up3_b1 = self.up(x3_b1)  # H/4, C=64
-        up3_b2 = self.up(x3_b2)  # H/4, C=64
-        fused2 = self.fusion_att_2(up3_b1, up3_b2, x2_att)  # C=64
+        # x1_att_b1 = self.att_1_b1(x1_b1)  # 32
+        # x1_att_b2 = self.att_1_b2(x1_b2)  # 32
+        x1_att = self.cross_att_1(x1_b1, x1_b2)  # 32
+        x1_up = torch.cat([self.up(x2_up), x1_att], dim=1)   # 64+32
+        x1_up = self.up_conv3(x1_up)
 
-        # combine decoder feature (upsampled x3_up) with fused2
-        x3_up_us = self.up(x3_up)  # H/4, C=64
-        x2_cat_dec = torch.cat([x3_up_us, fused2], dim=1)  # 64+64=128
-        x2_up = self.up_conv2(x2_cat_dec)  # -> 64
-
-        # level1 attention: concat x1_b1 (16) + x1_b2 (16) -> 32
-        x1_cat = torch.cat([x1_b1, x1_b2], dim=1)
-        x1_att = self.att_1(x1_cat)  # 32
-
-        # fused level1 from up(x2_b1), up(x2_b2), x1_att
-        up2_b1 = self.up(x2_b1)  # H/2, C=32
-        up2_b2 = self.up(x2_b2)  # H/2, C=32
-        fused1 = self.fusion_att_1(up2_b1, up2_b2, x1_att)  # C=32
-
-        # combine decoder feature with fused1
-        x2_up_us = self.up(x2_up)  # H/2, C=64
-        x1_cat_dec = torch.cat([x2_up_us, fused1], dim=1)  # 64+32=96
-        x1_up = self.up_conv3(x1_cat_dec)  # -> 32
-
-        x1_up = self.up(x1_up)              # H, 32
+        x1_up = self.up(x1_up)              #
         prob = self.outp(x1_up)           # 1
 
-        return prob
+        return prob          
