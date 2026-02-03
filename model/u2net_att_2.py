@@ -91,64 +91,39 @@ class CrossAttentionFusion(nn.Module):
         # 4. 与原始 S2 特征融合
         return out + x_s2
 
-# class BidirectionalCrossAttention(nn.Module):
-#     def __init__(self, s2_ch, dem_ch, out_ch):
-#         super().__init__()
-#         # S2作为query的注意力
-#         self.attn_s2_query = CrossAttentionFusion(s2_ch, dem_ch, out_ch)
-#         # DEM作为query的注意力
-#         self.attn_dem_query = CrossAttentionFusion(dem_ch, s2_ch, out_ch)
-        
-#         # 融合两种注意力结果
-#         self.fusion = nn.Sequential(
-#             nn.Conv2d(2 * out_ch, out_ch, kernel_size=3, padding=1),
-#             nn.ReLU(),
-#             nn.Conv2d(out_ch, out_ch, kernel_size=1)
-#         )
-
-#     def forward(self, x_s2, x_dem):
-#         # S2作为query的注意力
-#         out_s2 = self.attn_s2_query(x_s2, x_dem)
-#         # DEM作为query的注意力
-#         out_dem = self.attn_dem_query(x_dem, x_s2)  # 注意参数顺序        
-#         # 拼接并融合两种结果
-#         combined = torch.cat([out_s2, out_dem], dim=1)
-#         return self.fusion(combined)
-
-
 class BidirectionalCrossAttention(nn.Module):
     def __init__(self, s2_ch, dem_ch, out_ch):
         super().__init__()
-        # S2作为query的注意力
+        # use s2 as a query attention 
         self.attn_s2_query = CrossAttentionFusion(s2_ch, dem_ch, out_ch)
-        # DEM作为query的注意力
+        # use dem as a query attention
         self.attn_dem_query = CrossAttentionFusion(dem_ch, s2_ch, out_ch)
         
-        # 定义两个 LayerNorm，分别用于两个分支的输出
+        # define LayerNorm layers for both outputs
         self.ln_s2 = nn.LayerNorm(out_ch)
         self.ln_dem = nn.LayerNorm(out_ch)
         
-        # 融合两种注意力结果
+        ## fuse the two attention results
         self.fusion = nn.Sequential(
             nn.Conv2d(2 * out_ch, out_ch, kernel_size=3, padding=1),
-            nn.BatchNorm2d(out_ch), # 卷积层后依然建议保留 BN
+            nn.BatchNorm2d(out_ch), 
             nn.ReLU(),
             nn.Conv2d(out_ch, out_ch, kernel_size=1)
         )
 
     def forward(self, x_s2, x_dem):
-        # 1. 计算交叉注意力
+        # 1. calculate bidirectional cross attention
         out_s2 = self.attn_s2_query(x_s2, x_dem)
         out_dem = self.attn_dem_query(x_dem, x_s2)
         
-        # 2. 填充 LayerNorm
-        # LayerNorm 需要 [B, N, C] 格式，所以需要转换维度
+        # 2. apply LayerNorm
+        # LayerNorm requires [B, N, C] format, so we need to reshape
         b, c, h, w = out_s2.size()
         
-        # 对 out_s2 进行 LN
+        # apply LN to out_s2
         out_s2 = out_s2.view(b, c, -1).permute(0, 2, 1) # [B, N, C]
         out_s2 = self.ln_s2(out_s2)
-        out_s2 = out_s2.permute(0, 2, 1).view(b, c, h, w) # 还原 [B, C, H, W]
+        out_s2 = out_s2.permute(0, 2, 1).view(b, c, h, w) # restore [B, C, H, W]
         
         # 对 out_dem 进行 LN
         out_dem = out_dem.view(b, c, -1).permute(0, 2, 1) # [B, N, C]

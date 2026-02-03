@@ -16,7 +16,6 @@ def conv3x3_bn_relu(in_channels, out_channels):
         nn.ReLU(inplace=True)
         )
 
-
 class ChannelAttention(nn.Module):
     def __init__(self, channel, reduction=16):
         super().__init__()

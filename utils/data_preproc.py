@@ -61,3 +61,4 @@ def normalize_scene(image, max_bands, min_bands):
     normalized = (image.astype(float) - min_bands_arr) \
                      / (max_bands_arr - min_bands_arr + 1e-6)
     return np.clip(normalized, 0.0, 1.0)  
+

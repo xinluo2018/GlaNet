@@ -9,48 +9,68 @@ import random
 import torch
 import rasterio as rio
 import numpy as np
+from utils.utils import get_lat
 from utils.img2patch import crop2patch
+from torchvision.transforms import v2
 
 ## create related functions
-## - crop scene to patches
-class RandomCrop:
-    '''
-    des: randomly crop corresponding to specific patch size
-    '''
-    def __init__(self, size=(256, 256)):
-        self.size = size
-        self.loc_start = []
-    def __call__(self, image, truth):
-        '''
-        image: np.array(), channel_first (C, H, W)
-        truth: np.array(), (H, W)/(C, H, W)
-        '''
-        if len(truth.shape)==2:
-            truth = truth[np.newaxis, ...]
-        start_row = random.randint(0, truth.shape[1]-self.size[0])
-        start_col = random.randint(0, truth.shape[2]-self.size[1])
-        patch = image[:, start_row:start_row+self.size[0],start_col:start_col+self.size[1]]
-        ptruth = truth[:, start_row:start_row+self.size[0], start_col:start_col+self.size[1]]
-        self.loc_start = [start_row, start_col]
-        return patch, ptruth
-    
+## read scene
+def read_scenes(scene_paths, truth_paths, dem_paths):
+  paths_zip = zip(scene_paths, truth_paths, dem_paths)
+  scenes_arr = []
+  truths_arr = []
+  scenes_lat = []
+  for scene_path, truth_path, dem_path in paths_zip:
+      ## 1. read scene and truth images
+      with rio.open(scene_path) as src:
+        scene_arr = src.read().transpose((1, 2, 0))  # (H, W, C)
+        scene_lat = get_lat(src) 
+      with rio.open(truth_path) as truth_src:
+        truth_arr = truth_src.read(1)  # (H, W)
+      ## 2. read dem
+      with rio.open(dem_path) as dem_src:
+        dem_arr = dem_src.read(1)  # (H, W)
+      dem_arr = dem_arr[:, :, np.newaxis]  # expand to (H, W, 1)
+      scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
+      scenes_arr.append(scene_arr)
+      truths_arr.append(truth_arr)
+      scenes_lat.append(scene_lat)
+  return scenes_arr, truths_arr, scenes_lat
+
+## build custom transforms
+class GaussianNoise(v2.GaussianNoise):
+    def __init__(self, mean = 0.0, sigma_max=0.1, p=0.5):
+        super().__init__()
+        self.mean = mean
+        self.sigma_max = sigma_max
+        self.p = p
+    def transform(self, inpt, params):
+        patch, ptruth = inpt[0:-1], inpt[-1:]
+        if torch.rand(1) < self.p:
+            self.sigma = torch.rand(1)*self.sigma_max ## update sigma        
+            patch = super().transform(patch, params)
+            oupt = torch.cat([patch, ptruth], dim=0)
+            return oupt
+        else:
+            return inpt
+
 ### - Dataset definition
 class ScenePathSet(torch.utils.data.Dataset):
     '''
     des: build dataset using file paths
     '''
-    def __init__(self, paths_scene, paths_truth,  paths_dem=None, path_size=(512, 512)):
+    def __init__(self, paths_scene, paths_truth,  paths_dem=None, patch_size=(512, 512)):
         self.paths_scene = paths_scene
         self.paths_dem = paths_dem
         self.paths_truth = paths_truth
-        self.path_size = path_size
+        self.patch_size = patch_size
     def __getitem__(self, idx):
         # Load scene and truth image
         scene_path = self.paths_scene[idx]
         truth_path = self.paths_truth[idx]
         ## 1. read scene and truth images
         with rio.open(scene_path) as src:
-            scene_arr = src.read().transpose((1, 2, 0))  # (H, W, C)
+            scene_arr = src.read()  # (C, H, W)
         with rio.open(truth_path) as truth_src:
             truth_arr = truth_src.read(1)  # (H, W)
         ## 2. read dem
@@ -58,86 +78,86 @@ class ScenePathSet(torch.utils.data.Dataset):
             dem_path = self.paths_dem[idx]
             with rio.open(dem_path) as dem_src:
                 dem_arr = dem_src.read(1)  # (H, W)
-            dem_arr = dem_arr[:, :, np.newaxis]  # expand to (H, W, 1)
-            scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
+            dem_arr = dem_arr[np.newaxis, :, :]  # expand to (1, H, W)
+            scene_arr = np.concatenate([scene_arr, dem_arr], axis=0)  # (C+1, H, W)
         ## post processing
-        scene_arr = scene_arr.astype(np.float32).transpose((2, 0, 1)) # (C, H, W)
-        patch, truth = RandomCrop(size=(self.path_size, self.path_size))(scene_arr, truth_arr)  # crop
-        truth = truth[np.newaxis, :].astype(np.int8)  # (C, H, W)
+
+        scene_truth_arr = np.concatenate([scene_arr, truth_arr[np.newaxis, ...]], axis=0)  # (C+1, H, W)
+        crop_patch = crop2patch(scene_truth_arr, channel_first=True)
+        patch_truth_arr = crop_patch.toSize(size=(self.patch_size, self.patch_size))  # (c, h, w)
+        patch, ptruth = patch_truth_arr[:-1, :, :], patch_truth_arr[-1:, :, :]  # (c, h, w), (1, h, w)        
         patch = torch.from_numpy(patch).float()
-        truth = torch.from_numpy(truth).float()
-        return patch, truth
+        ptruth = torch.from_numpy(ptruth).float()
+        return patch, ptruth
     def __len__(self):
         return len(self.paths_scene)
 
 ### - Dataset definition
 class SceneArraySet(torch.utils.data.Dataset):
-    def __init__(self, scenes_arr, truths_arr, patch_size=512, patch_resize=None):
+    def __init__(self, 
+                 scenes_arr, 
+                 truths_arr, 
+                 scenes_lat,
+                 patch_size=512, 
+                 patch_resize=None,
+                 augment=True
+                 ):
         '''
         des: build dataset using pre-loaded arrays
         args:
             scenes_arr: list of np.arrays, each array is (H, W, C) 
             truths_arr: list of np.arrays, each array is (H, W)//(C, H, W)
-            path_size: tuple, (height, width) of cropped patch
+            scenes_lat: list of float, each is the latitude of the scene
         '''
         self.scenes_arr = scenes_arr
         self.truths_arr = truths_arr
+        self.scenes_lat = scenes_lat
         self.patch_size = patch_size
-        self.patch_resize = patch_resize
+        self.patch_resize = patch_resize    
+        self.augment = augment    
+        ## combine transforms    
+        self.transforms_base = v2.Compose([
+            v2.ToImage(),
+            v2.RandomCrop(size=(patch_size, patch_size)),
+        ]) 
+        self.transforms_aug = v2.Compose([
+            v2.RandomHorizontalFlip(p=0.5),
+            v2.RandomVerticalFlip(p=0.5),
+            v2.RandomRotation(degrees=180),
+            GaussianNoise(mean = 0, sigma_max=0.03, p=0.3)    
+        ]) 
     def __getitem__(self, idx):
-        scene_arr = self.scenes_arr[idx].astype(np.float32).transpose((2, 0, 1)) # (C, H, W)
+        scene_arr = self.scenes_arr[idx] # (H, W, C)
         truth_arr = self.truths_arr[idx]
-        patch, ptruth = RandomCrop(size=(self.patch_size, self.patch_size))(scene_arr, truth_arr)  # crop
-        patch, ptruth = patch.transpose((1,2,0)), ptruth.transpose((1,2,0))  # to (H, W, C)
-        if self.patch_resize is not None:
-            patch = cv2.resize(patch, dsize=(self.patch_resize, self.patch_resize), interpolation=cv2.INTER_AREA)
-            ptruth = cv2.resize(ptruth, dsize=(self.patch_resize, self.patch_resize), interpolation=cv2.INTER_NEAREST)
-            ptruth = ptruth[..., np.newaxis]        
-        patch, ptruth = patch.transpose((2,0,1)), ptruth.transpose((2,0,1))  # to (C, H, W)
-        patch = torch.from_numpy(patch).float()
-        ptruth = torch.from_numpy(ptruth).float()
-        return patch, ptruth
+        scene_truth = np.concatenate([scene_arr, truth_arr[:, :, np.newaxis]], 
+                                      axis=-1)
+        patch_truth_ = self.transforms_base(scene_truth) 
+        if self.augment:
+            patch_truth_ = self.transforms_aug(patch_truth_)  ## data augmentation
+        if self.patch_resize and self.patch_resize != self.patch_size:
+            patch_truth_ = v2.Resize(size=(self.patch_resize, self.patch_resize))(patch_truth_)        
+        patch_, ptruth_ = patch_truth_[0:-1], patch_truth_[-1:]  ## separate patch and truth        
+        plat = torch.tensor(self.scenes_lat[idx]).float()
+        return patch_, ptruth_, plat
     def __len__(self):
-        return len(self.scenes_arr) 
-
+        return len(self.scenes_arr)  
+    
 ### - Dataset definition
 class PatchPathSet(torch.utils.data.Dataset):
     def __init__(self, paths_valset):
         self.paths_valset = paths_valset
     def __getitem__(self, idx):
         ## load valset patch, patch: (H, W, C)
-        patch_ptruth = torch.load(self.paths_valset[idx], weights_only=True) 
-        patch_ptruth = patch_ptruth.permute(2,0,1)  # (C, H, W)
-        return patch_ptruth[0:-1], patch_ptruth[-1:]
+        patch_ptruth, patch_lat = torch.load(self.paths_valset[idx], weights_only=True) 
+        patch_ptruth = patch_ptruth.permute(2, 0, 1)
+        patch = v2.functional.to_dtype(patch_ptruth[0:-1], dtype=torch.float32) 
+        ptruth = v2.functional.to_dtype(patch_ptruth[-1:], dtype=torch.float32)      
+        plat = torch.tensor(patch_lat)
+        return patch, ptruth, plat
     def __len__(self):
-        return len(self.paths_valset)
+        return len(self.paths_valset) 
 
 ### - Dataset definition
-class PatchPathSet_2(torch.utils.data.Dataset):
-    def __init__(self, paths_valset, patch_resize=None):
-        self.paths_valset = paths_valset
-        self.patch_resize = patch_resize
-    def __getitem__(self, idx):
-        ## load valset patch, patch: (H, W, C)
-        patch_ptruth = torch.load(self.paths_valset[idx], weights_only=True) 
-        patch, ptruth = patch_ptruth[...,0:-1], patch_ptruth[...,-1:]        
-        ## crop inner 256x256 for validation
-        if ptruth.shape[0]>256:
-            crop_start = (patch.shape[0]-256)//2
-            ptruth = ptruth[crop_start:crop_start+256, 
-                            crop_start:crop_start+256, :]
-        if self.patch_resize is not None:
-            patch = cv2.resize(patch.numpy().astype(np.float32), 
-                               dsize=(self.patch_resize, self.patch_resize), 
-                               interpolation=cv2.INTER_AREA)
-            patch = torch.from_numpy(patch).float()
-        patch, ptruth = patch.permute((2,0,1)), ptruth.permute((2,0,1))  ## to (C, H, W)
-        return patch, ptruth
-    def __len__(self):
-        return len(self.paths_valset)
-
-### - Dataset definition
-
 class SceneArraySet_scales(torch.utils.data.Dataset):
     def __init__(self, scenes_arr, 
                  truths_arr, 

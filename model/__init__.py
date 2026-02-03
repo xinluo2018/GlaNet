@@ -6,4 +6,4 @@ from .unet_scales import unet_scales
 from .u2net_att import u2net_att
 from .u2net_att_1 import u2net_att_1
 from .u2net_att_2 import u2net_att_2
-
+from .u2net_dem_adj import u2net_dem_adj
