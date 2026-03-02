@@ -1,6 +1,6 @@
 ''' 
 author: xin luo
-create: 2025.12.20
+create: 2025.12.20, modify: 2026.3.2
 des: dataset and dataloader for deep learning tasks in remote sensing
 '''
 
@@ -19,12 +19,12 @@ def read_scenes(scene_paths, truth_paths, dem_paths):
   paths_zip = zip(scene_paths, truth_paths, dem_paths)
   scenes_arr = []
   truths_arr = []
-  scenes_lat = []
+  # scenes_lat = []
   for scene_path, truth_path, dem_path in paths_zip:
       ## 1. read scene and truth images
       with rio.open(scene_path) as src:
         scene_arr = src.read().transpose((1, 2, 0))  # (H, W, C)
-        scene_lat = get_lat(src) 
+        # scene_lat = get_lat(src) 
       with rio.open(truth_path) as truth_src:
         truth_arr = truth_src.read(1)  # (H, W)
       ## 2. read dem
@@ -34,32 +34,33 @@ def read_scenes(scene_paths, truth_paths, dem_paths):
       scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
       scenes_arr.append(scene_arr)
       truths_arr.append(truth_arr)
-      scenes_lat.append(scene_lat)
-  return scenes_arr, truths_arr, scenes_lat
+      # scenes_lat.append(scene_lat)
+  return scenes_arr, truths_arr
 
-## build custom transforms
-class GaussianNoise(v2.GaussianNoise):
-    def __init__(self, mean = 0.0, sigma_max=0.1, p=0.5):
-        super().__init__()
-        self.mean = mean
-        self.sigma_max = sigma_max
-        self.p = p
-    def transform(self, inpt, params):
-        patch, ptruth = inpt[0:-1], inpt[-1:]
-        if torch.rand(1) < self.p:
-            self.sigma = torch.rand(1)*self.sigma_max ## update sigma        
-            patch = super().transform(patch, params)
-            oupt = torch.cat([patch, ptruth], dim=0)
-            return oupt
-        else:
-            return inpt
+# ## build custom transforms
+# class GaussianNoise(v2.GaussianNoise):
+#     def __init__(self, mean = 0.0, sigma_max=0.1, p=0.5):
+#         super().__init__()
+#         self.mean = mean
+#         self.sigma_max = sigma_max
+#         self.p = p
+#     def transform(self, inpt, params):  # rewrite transform function to update sigma
+#         patch, ptruth = inpt[0:-1], inpt[-1:]
+#         if torch.rand(1) < self.p:
+#             self.sigma = torch.rand(1)*self.sigma_max ## update sigma        
+#             patch = super().transform(patch, params)
+#             oupt = torch.cat([patch, ptruth], dim=0)
+#             return oupt
+#         else:
+#             return inpt
 
-### - Dataset definition
+### - Dataset definition (delete)
 class ScenePathSet(torch.utils.data.Dataset):
     '''
     des: build dataset using file paths
     '''
-    def __init__(self, paths_scene, paths_truth,  paths_dem=None, patch_size=(512, 512)):
+    def __init__(self, paths_scene, paths_truth,  
+                 paths_dem=None, patch_size=(512, 512)):
         self.paths_scene = paths_scene
         self.paths_dem = paths_dem
         self.paths_truth = paths_truth
@@ -97,67 +98,49 @@ class SceneArraySet(torch.utils.data.Dataset):
     def __init__(self, 
                  scenes_arr, 
                  truths_arr, 
-                 scenes_lat,
                  patch_size=512, 
-                 patch_resize=None,
-                 augment=True
+                 transforms=None
                  ):
         '''
         des: build dataset using pre-loaded arrays
         args:
             scenes_arr: list of np.arrays, each array is (H, W, C) 
             truths_arr: list of np.arrays, each array is (H, W)//(C, H, W)
-            scenes_lat: list of float, each is the latitude of the scene
         '''
         self.scenes_arr = scenes_arr
         self.truths_arr = truths_arr
-        self.scenes_lat = scenes_lat
         self.patch_size = patch_size
-        self.patch_resize = patch_resize    
-        self.augment = augment    
-        ## combine transforms    
-        self.transforms_base = v2.Compose([
-            v2.ToImage(),
-            v2.RandomCrop(size=(patch_size, patch_size)),
-        ]) 
-        self.transforms_aug = v2.Compose([
-            v2.RandomHorizontalFlip(p=0.5),
-            v2.RandomVerticalFlip(p=0.5),
-            v2.RandomRotation(degrees=180),
-            GaussianNoise(mean = 0, sigma_max=0.03, p=0.3)    
-        ]) 
+        self.transforms = transforms
     def __getitem__(self, idx):
         scene_arr = self.scenes_arr[idx] # (H, W, C)
         truth_arr = self.truths_arr[idx]
         scene_truth = np.concatenate([scene_arr, truth_arr[:, :, np.newaxis]], 
                                       axis=-1)
-        patch_truth_ = self.transforms_base(scene_truth) 
-        if self.augment:
-            patch_truth_ = self.transforms_aug(patch_truth_)  ## data augmentation
-        if self.patch_resize and self.patch_resize != self.patch_size:
-            patch_truth_ = v2.Resize(size=(self.patch_resize, self.patch_resize))(patch_truth_)        
-        patch_, ptruth_ = patch_truth_[0:-1], patch_truth_[-1:]  ## separate patch and truth        
-        plat = torch.tensor(self.scenes_lat[idx]).float()
-        return patch_, ptruth_, plat
+        ## transforms           
+        if self.transforms is not None:
+            scene_truth = self.transforms(scene_truth)  ## data augmentation
+        patch_, ptruth_ = scene_truth[0:-1], scene_truth[-1:]  ## separate patch and truth        
+        return patch_, ptruth_
     def __len__(self):
         return len(self.scenes_arr)  
     
 ### - Dataset definition
 class PatchPathSet(torch.utils.data.Dataset):
-    def __init__(self, paths_valset):
+    def __init__(self, paths_valset, transforms=None):
         self.paths_valset = paths_valset
+        self.transforms = transforms
     def __getitem__(self, idx):
         ## load valset patch, patch: (H, W, C)
-        patch_ptruth, patch_lat = torch.load(self.paths_valset[idx], weights_only=True) 
-        patch_ptruth = patch_ptruth.permute(2, 0, 1)
-        patch = v2.functional.to_dtype(patch_ptruth[0:-1], dtype=torch.float32) 
-        ptruth = v2.functional.to_dtype(patch_ptruth[-1:], dtype=torch.float32)      
-        plat = torch.tensor(patch_lat)
-        return patch, ptruth, plat
+        patch_ptruth = torch.load(self.paths_valset[idx], weights_only=False) 
+        if self.transforms is not None:
+            patch_ptruth = self.transforms(patch_ptruth)  ## data augmentation
+        patch = patch_ptruth[0:-1] 
+        ptruth = patch_ptruth[-1:] 
+        return patch, ptruth
     def __len__(self):
         return len(self.paths_valset) 
 
-### - Dataset definition
+### - Dataset definition 
 class SceneArraySet_scales(torch.utils.data.Dataset):
     def __init__(self, scenes_arr, 
                  truths_arr, 

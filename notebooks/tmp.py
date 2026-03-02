@@ -1,220 +1,204 @@
-import time
 import torch
-import random
 import torch.nn as nn
-from glob import glob
-from notebooks import config
-from utils.imgShow import imsShow
-from model import unet, unet_scales 
-from utils.utils import read_scenes
-from utils.metrics import oa_binary, miou_binary
-from utils.dataloader import SceneArraySet_scales, PatchPathSet_scales
+import torch.nn.functional as F
+from torchvision.models import convnext_tiny, ConvNeXt_Tiny_Weights
 
-
-patch_size = 256
-higher_patch_size = 1024
-
-
-### traset
-paths_scene_tra, paths_truth_tra = config.paths_scene_tra, config.paths_truth_tra
-paths_dem_tra = config.paths_dem_tra
-# paths_dem_tra = config.paths_dem_adjust_tra
-print(f'train scenes: {len(paths_scene_tra)}')
-### valset
-paths_valset = sorted(glob(f'data/dset/valset/patch_{higher_patch_size}/*'))  ## for model prediction 
-# paths_patch_valset = sorted(glob(f'data/dset/valset/patch_{patch_size}_dem_adjust/*'))
-print(f'vali patch: {len(paths_valset)}')
-
-
-## load traset
-scenes_dem_arr, truths_arr = read_scenes(paths_scene_tra, 
-                                            paths_truth_tra, 
-                                            paths_dem_tra) 
-print('traset:', len(scenes_dem_arr))
-
-
-
-# Create dataset instances
-tra_data = SceneArraySet_scales(scenes_arr=scenes_dem_arr,    
-                          truths_arr=truths_arr,   
-                          patch_size=256,   
-                          higher_patch_size=1024,   
-                          patch_resize=True)   
-val_data = PatchPathSet_scales(paths_valset=paths_valset,   
-                          higher_patch_size=1024,  
-                          patch_size=256,  
-                          patch_resize=True)     
-
-tra_loader = torch.utils.data.DataLoader(tra_data, 
-                                         batch_size=4, 
-                                         shuffle=True, 
-                                         num_workers=10)
-val_loader = torch.utils.data.DataLoader(val_data, 
-                                         batch_size=4, 
-                                         num_workers=10)
-
-model = unet_scales(num_bands_local=7, 
-                    num_bands_global=7, 
-                    patch_size=patch_size,
-                    higher_patch_size=higher_patch_size)
-
-tra_loader_iter = iter(tra_loader)
-val_loader_iter = iter(val_loader)
-tra_one = next(tra_loader_iter)
-val_one = next(val_loader_iter)
-pred_local, pred_global = model(tra_one[0], tra_one[2])
-
-### create loss and optimizer
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)  
-lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, \
-                                          mode='min', factor=0.6, patience=20)
-
-loss_bce = nn.BCELoss()
-def loss_rmse(y_pred, y_true):
-    mse = torch.mean((y_pred - y_true)**2)
-    return torch.sqrt(mse)
-
-class Loss_scales(nn.Module):
-    def __init__(self):
+class ConvBlock(nn.Module):
+    """基础卷积块"""
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1):
         super().__init__()
-        self.loss_global = nn.BCELoss()
-    def forward(self, x_local, y_local, x_global,  y_global):
-        loss_global = self.loss_global(x_global, y_global)
-        loss_local = loss_rmse(x_local, y_local)
-        return loss_local + loss_global
-loss_scales = Loss_scales()
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=False)
+        self.norm = nn.BatchNorm2d(out_channels)
+        self.act = nn.ReLU(inplace=True)
+    
+    def forward(self, x):
+        return self.act(self.norm(self.conv(x)))
 
-'''------train step------'''
-def train_step(x_patch,
-               y_patch,
-               x_higher_patch, 
-               y_higher_patch,
-               model, 
-               optimizer, 
-               loss_fn):
-    optimizer.zero_grad()
-    pred_local, pred_global = model(x_patch, x_higher_patch)
-    # loss = loss_fn(pred_local, y_patch.float())
-    loss = loss_fn(x_local=pred_local, 
-                    y_local=y_patch.float(), 
-                    x_global=pred_global, 
-                    y_global=y_higher_patch.float())
-    loss.backward()
-    optimizer.step()    
-    miou = miou_binary(pred=pred_local, truth=y_patch, device=x_patch.device)
-    oa = oa_binary(pred=pred_local, truth=y_patch, device=x_patch.device)
-    return loss, miou, oa
-'''------validation step------'''
-def val_step(x_patch,
-             y_patch,
-             x_higher_patch,
-             y_higher_patch, 
-             model,
-             loss_fn):
-    model.eval()
-    with torch.no_grad():
-        pred_local, pred_global = model(x_patch, x_higher_patch)
-        # loss = loss_fn(pred_local, y_patch.float())
-        loss = loss_fn(x_local=pred_local, 
-                       y_local=y_patch.float(), 
-                       x_global=pred_global, 
-                       y_global=y_higher_patch.float())
-    miou = miou_binary(pred=pred_local, truth=y_patch, device=x_patch.device)
-    oa = oa_binary(pred=pred_local, truth=y_patch, device=x_patch.device)
-    return loss, miou, oa
+class ResidualBlock(nn.Module):
+    """残差块 - 保持空间尺寸"""
+    def __init__(self, in_channels, out_channels, stride=1):
+        super().__init__()
+        # 确保中间通道数一致
+        mid_channels = out_channels // 4
+        
+        self.conv1 = ConvBlock(in_channels, mid_channels, stride=stride)
+        self.conv2 = ConvBlock(mid_channels, out_channels)
+        
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+    
+    def forward(self, x):
+        identity = self.shortcut(x)
+        out = self.conv1(x)
+        out = self.conv2(out)
+        return F.relu(out + identity)
 
-'''------train loops------'''
-def train_loops(model,
-                loss_fn, 
-                optimizer, 
-                tra_loader, 
-                val_loader, 
-                epoches, 
-                device, 
-                lr_scheduler=None):
-    tra_loss_loops, tra_miou_loops, tra_oa_loops = [], [], []
-    val_loss_loops, val_miou_loops, val_oa_loops = [], [], []
-    model = model.to(device)
-    size_tra_loader = len(tra_loader)
-    size_val_loader = len(val_loader)
-    for epoch in range(epoches):
-        start = time.time()
-        tra_loss, val_loss = 0, 0
-        tra_miou, val_miou = 0, 0
-        tra_oa, val_oa = 0, 0
-        '''-----train the model-----'''
-        for x_patch, y_patch, x_higher_patch, y_higher_patch in tra_loader:
-            x_patch, y_patch, x_higher_patch, y_higher_patch = x_patch.to(device), y_patch.to(device), x_higher_patch.to(device), y_higher_patch.to(device)
-            loss, miou, oa = train_step(x_patch=x_patch, 
-                                        y_patch=y_patch,
-                                        x_higher_patch=x_higher_patch,
-                                        y_higher_patch=y_higher_patch,
-                                        model=model,
-                                        optimizer=optimizer,
-                                        loss_fn=loss_fn)                                        
-            tra_loss += loss.item()
-            tra_miou += miou.item()
-            tra_oa += oa.item()
-        if lr_scheduler:
-            lr_scheduler.step(tra_loss)    # if using ReduceLROnPlateau
-        '''----- validation the model: time consuming -----'''
-        for x_patch, y_patch, x_higher_patch, y_higher_patch in val_loader:
-            x_patch, y_patch, x_higher_patch, y_higher_patch = x_patch.to(device), y_patch.to(device), x_higher_patch.to(device), y_higher_patch.to(device)
-            loss, miou, oa = val_step(x_patch=x_patch, 
-                                    y_patch=y_patch, 
-                                    x_higher_patch=x_higher_patch, 
-                                    y_higher_patch=y_higher_patch, 
-                                    model=model, 
-                                    loss_fn=loss_fn)            
-            val_loss += loss.item()
-            val_miou += miou.item()
-            val_oa += oa.item()
-        ## Accuracy
-        tra_loss = tra_loss/size_tra_loader
-        val_loss = val_loss/size_val_loader
-        tra_miou = tra_miou/size_tra_loader
-        val_miou = val_miou/size_val_loader
-        tra_oa = tra_oa/size_tra_loader
-        val_oa = val_oa/size_val_loader
-        tra_loss_loops.append(tra_loss); tra_miou_loops.append(tra_miou); tra_oa_loops.append(tra_oa)
-        val_loss_loops.append(val_loss); val_miou_loops.append(val_miou); val_oa_loops.append(val_oa)
-        print(f'Ep{epoch+1}: tra-> Loss:{tra_loss:.3f},Oa:{tra_oa:.3f},Miou:{tra_miou:.3f}, '
-                f'val-> Loss:{val_loss:.3f},Oa:{val_oa:.3f}, Miou:{val_miou:.3f},time:{time.time()-start:.1f}s')
-        ## show the result
-        if (epoch+1)%10 == 0:
-            model.eval()
-            sam_index = random.randrange(len(val_data))
-            patch, ptruth, higher_patch, higher_ptruth = val_data[sam_index]
-            patch, ptruth = torch.unsqueeze(patch.float(), 0).to(device), ptruth.to(device)
-            higher_patch, higher_ptruth = torch.unsqueeze(higher_patch.float(), 0).to(device), torch.unsqueeze(higher_ptruth.float(), 0).to(device)
-            pred_local, pred_global = model(patch, higher_patch)
-            ## convert to numpy and plot
-            patch = patch[0].to('cpu').detach().numpy().transpose(1,2,0)
-            pdem = patch[:,:, -1]
-            pred_patch = pred_local[0].to('cpu').detach().numpy()
-            ptruth = ptruth.to('cpu').detach().numpy()
-            pred_higher_patch = pred_global[0].to('cpu').detach().numpy()
-            higher_patch = higher_patch[0].to('cpu').detach().numpy().transpose(1,2,0)
-            higher_ptruth = higher_ptruth.to('cpu').detach().numpy()
-            imsShow([higher_patch, pred_higher_patch, patch, pdem, pred_patch, ptruth], 
-                    clip_list = (2,0,2,2,0,0),
-                    img_name_list=['input_higher_patch', 'pred_higher_patch', 'input_patch', 
-                                   'pdem', 'prediction', 'truth'],                     
-                    figsize=(15,3))
-    metrics = {'tra_loss':tra_loss_loops, 'tra_miou':tra_miou_loops, 'tra_oa': tra_oa_loops, 
-                    'val_loss': val_loss_loops, 'val_miou': val_miou_loops, 'val_oa': val_oa_loops}
-    return metrics 
+class TerrainGuidedAttention(nn.Module):
+    """地形引导注意力模块 - 添加空间对齐"""
+    def __init__(self, img_channels, dem_channels):
+        super().__init__()
+        # DEM特征投影
+        self.dem_proj = nn.Sequential(
+            nn.Conv2d(dem_channels, img_channels, 1),
+            nn.BatchNorm2d(img_channels),
+            nn.ReLU()
+        )
+        
+        # 注意力生成网络
+        self.attention_net = nn.Sequential(
+            nn.Conv2d(img_channels * 2, img_channels, 3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(img_channels, img_channels, 1),
+            nn.Sigmoid()
+        )
+    
+    def forward(self, img_feat, dem_feat):
+        # DEM特征投影
+        dem_proj = self.dem_proj(dem_feat)
+        
+        # 确保空间尺寸一致
+        if img_feat.size(2) != dem_proj.size(2) or img_feat.size(3) != dem_proj.size(3):
+            # 使用双线性插值调整DEM特征尺寸
+            dem_proj = F.interpolate(
+                dem_proj, 
+                size=img_feat.shape[2:], 
+                mode='bilinear', 
+                align_corners=True
+            )
+        
+        # 生成地形引导注意力图
+        concat_feat = torch.cat([img_feat, dem_proj], dim=1)
+        attention = self.attention_net(concat_feat)
+        
+        # 注意力加权融合
+        terrain_guided_feat = img_feat * attention
+        
+        # 残差连接
+        return terrain_guided_feat + dem_proj
+
+class GlacierSegNet(nn.Module):
+    """修复后的冰川范围分割模型 - 确保空间尺寸对齐"""
+    def __init__(self, num_spectral_bands=6, num_classes=1):
+        super().__init__()
+        
+        # 多光谱影像编码器 (使用ConvNeXt-Tiny作为骨干网络)
+        self.spectral_encoder = convnext_tiny(weights=ConvNeXt_Tiny_Weights.DEFAULT)
+        
+        # 修改第一层以适应6波段输入
+        self.spectral_encoder.features[0][0] = nn.Conv2d(
+            num_spectral_bands, 96, kernel_size=4, stride=4, padding=0
+        )
+        
+        # DEM数据处理流
+        self.dem_encoder = nn.Sequential(
+            nn.Conv2d(1, 32, 7, stride=2, padding=3),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            ResidualBlock(32, 64, stride=2),
+            ResidualBlock(64, 128, stride=2),
+            ResidualBlock(128, 256, stride=2)
+        )
+        
+        # 特征融合模块 (在不同阶段)
+        self.fusion_stages = nn.ModuleList([
+            # 第一阶段: 1/4分辨率 (地形引导注意力)
+            TerrainGuidedAttention(96, 32),  # 输入:96+32, 输出:96
+            
+            # 第二阶段: 1/8分辨率 (地形引导注意力)
+            TerrainGuidedAttention(192, 64), # 输入:192+64, 输出:192
+            
+            # 第三阶段: 1/16分辨率 (地形引导注意力)
+            TerrainGuidedAttention(384, 128), # 输入:384+128, 输出:384
+            
+            # 第四阶段: 1/32分辨率 (地形引导注意力)
+            TerrainGuidedAttention(768, 256)  # 输入:768+256, 输出:768
+        ])
+        
+        # 解码器输入通道
+        decoder_channels = [768, 384, 192, 96]
+        
+        # 特征解码器
+        self.decoder = nn.Sequential(
+            nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
+            nn.Conv2d(768, 384, 3, padding=1),
+            nn.BatchNorm2d(384),
+            nn.ReLU(),
+            
+            nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
+            nn.Conv2d(384, 192, 3, padding=1),
+            nn.BatchNorm2d(192),
+            nn.ReLU(),
+            
+            nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
+            nn.Conv2d(192, 96, 3, padding=1),
+            nn.BatchNorm2d(96),
+            nn.ReLU(),
+            
+            nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True),
+            nn.Conv2d(96, 32, 3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            
+            nn.Conv2d(32, num_classes, 1)
+        )
+    
+    def forward(self, spectral_img, dem_data):
+        # 处理多光谱影像
+        spectral_features = []
+        x = spectral_img
+        
+        # 获取ConvNeXt-Tiny的不同阶段特征
+        for i, layer in enumerate(self.spectral_encoder.features):
+            x = layer(x)
+            if i in [1, 3, 5, 7]:  # 保存不同阶段的输出特征
+                spectral_features.append(x)
+        
+        # 处理DEM数据
+        dem_features = []
+        d = dem_data
+        
+        # 逐步处理DEM并收集特征
+        d = self.dem_encoder[0](d)  # Conv2d
+        d = self.dem_encoder[1](d)  # BN
+        d = self.dem_encoder[2](d)  # ReLU
+        d = self.dem_encoder[3](d)  # MaxPool2d -> 1/4分辨率
+        dem_features.append(d)
+        
+        d = self.dem_encoder[4](d)  # 1/8分辨率
+        dem_features.append(d)
+        
+        d = self.dem_encoder[5](d)  # 1/16分辨率
+        dem_features.append(d)
+        
+        d = self.dem_encoder[6](d)  # 1/32分辨率
+        dem_features.append(d)
+        
+        # 选择正确分辨率的DEM特征
+        dem_selected_features = dem_features
+        
+        # 特征融合 (在不同分辨率阶段)
+        fused_features = []
+        for i in range(4):
+            fused = self.fusion_stages[i](
+                spectral_features[i], 
+                dem_selected_features[i]
+            )
+            fused_features.append(fused)
+        
+        # 使用最高层特征进行解码
+        seg_logits = self.decoder(fused_features[3])
+        
+        return seg_logits
 
 
-if __name__ == '__main__':
-  device = torch.device('cuda:0')  
-  metrics = train_loops(model=model,  
-                        epoches=200,  
-                        loss_fn=loss_scales,  
-                        optimizer=optimizer,  
-                        lr_scheduler=lr_scheduler,   
-                        tra_loader=tra_loader,   
-                        val_loader=val_loader,  
-                        device=device)  
-
-
+if __name__ == "__main__":
+    model = GlacierSegNet(num_spectral_bands=6, num_classes=1)
+    data = torch.randn(2, 6, 256, 256)  # 模拟输入 (批量大小=2)
+    dem = torch.randn(2, 1, 256, 256)    # 模拟DEM输入
+    output = model(data, dem)
+    print(output.shape)
