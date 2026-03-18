@@ -32,10 +32,8 @@ paths_dem_val = [paths_dem[i] for i in ids_val]
 # min_scenes = {'l5': 4891.0, 'l7': 6719.0,  
 #               'l8': 1.0, 'l9': 1.0, 's2': 1.0}
 ### scale and offset are given from GEE platform.  
-scale = {'l5': 2.75e-05, 'l7': 2.75e-05,
-                  'l8': 2.75e-05, 'l9': 2.75e-05, 's2': 0.0001} 
-offset = {'l5': -0.2, 'l7': -0.2, 
-                  'l8': -0.2, 'l9': -0.2, 's2': 0} 
+scale = {'l5': 2.75e-05, 'l7': 2.75e-05, 'l8': 2.75e-05, 'l9': 2.75e-05, 's2': 0.0001} 
+offset = {'l5': -0.2, 'l7': -0.2, 'l8': -0.2, 'l9': -0.2, 's2': 0} 
 max_dem = 8848.0  # highest point on Earth: Mount Everest
 min_dem = -420.0  # lowest point on Earth: Dead Sea Shore 
 

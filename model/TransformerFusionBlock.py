@@ -87,6 +87,8 @@ class CrossAttention(nn.Module):
         :param d_model: Output dimensionality of the model
         :param d_k: Dimensionality of queries and keys
         :param d_v: Dimensionality of values
+        :attn_pdrop: Dropout rate for attention
+        :resid_pdrop: Dropout rate for residuals
         :param h: Number of heads
         '''
         super(CrossAttention, self).__init__()
@@ -163,9 +165,7 @@ class CrossAttention(nn.Module):
 
         att_vis = torch.matmul(q_ir, k_vis) / np.sqrt(self.d_k)  # (b_s, h, nq, nk)
         att_ir = torch.matmul(q_vis, k_ir) / np.sqrt(self.d_k)   # (b_s, h, nq, nk)  
-        # att_vis = torch.matmul(k_vis, q_ir) / np.sqrt(self.d_k)
-        # att_ir = torch.matmul(k_ir, q_vis) / np.sqrt(self.d_k)
-
+ 
         # get attention matrix
         att_vis = torch.softmax(att_vis, -1)
         att_vis = self.attn_drop(att_vis)
@@ -197,8 +197,8 @@ class CrossTransformerBlock(nn.Module):
         """
         super(CrossTransformerBlock, self).__init__()
         self.loops = loops_num
-        self.ln_input = nn.LayerNorm(d_model)
-        self.ln_output = nn.LayerNorm(d_model)
+        # self.ln_input = nn.LayerNorm(d_model)
+        # self.ln_output = nn.LayerNorm(d_model)
         self.crossatt = CrossAttention(d_model, d_k, d_v, h, attn_pdrop, resid_pdrop)
         self.mlp_vis = nn.Sequential(nn.Linear(d_model, block_exp * d_model),
                                      # nn.SiLU(),  # changed from GELU
