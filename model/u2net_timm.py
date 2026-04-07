@@ -1,7 +1,12 @@
+'''
+author: xin luo
+create: 2026.4.2
+des: U-Net model with timm backbone
+'''
+
 import torch
 import torch.nn as nn
 import timm
-import torch.nn.functional as F
 
 def conv3x3_bn_relu(in_channels, out_channels):
     return nn.Sequential(
@@ -10,8 +15,13 @@ def conv3x3_bn_relu(in_channels, out_channels):
         nn.ReLU(inplace=True)
         )
 
+
+
 class u2net_timm(nn.Module):
-    def __init__(self, num_bands_b1, num_bands_b2, backbone_name='resnet34'):
+    def __init__(self, num_bands_b1, 
+                        num_bands_b2, 
+                        backbone_name='resnet34', 
+                        pretrained=False):
         '''
         num_bands_b1: number of bands for branch 1 (e.g., scene image)
         num_bands_b2: number of bands for branch 2 (e.g., DEM)
@@ -21,19 +31,17 @@ class u2net_timm(nn.Module):
         self.num_bands_b2 = num_bands_b2
         self.decode_channels = [64, 64, 64, 64, 32]  # decoder channels for each stage
         self.up = nn.Upsample(scale_factor=2, mode='nearest')  # upsample layer
+
         ## encoder part
         self.encoder_opt = timm.create_model(backbone_name, 
-                                            features_only=True, 
-                                            in_chans=num_bands_b1, 
-                                            out_indices=(0, 1, 2, 3, 4),
-                                            # norm_layer=nn.Identity
-                                            )
+                                        features_only=True, 
+                                        in_chans=num_bands_b1, 
+                                        pretrained=pretrained)
         self.encoder_dem = timm.create_model(backbone_name, 
-                                            features_only=True,
-                                            in_chans=num_bands_b2,
-                                            out_indices=(0, 1, 2, 3, 4),
-                                            # norm_layer=nn.Identity
-                                            )
+                                        features_only=True,
+                                        in_chans=num_bands_b2,
+                                        pretrained=pretrained)
+
         self.out_channels = self.encoder_opt.feature_info.channels()
         ## decoder part (fused features)
         self.DecoderBlocks = nn.ModuleList([
@@ -61,19 +69,22 @@ class u2net_timm(nn.Module):
         # skip connections: 
         skips_fea_opt = list(reversed(feas_opt[:-1]))
         skips_fea_dem = list(reversed(feas_dem[:-1]))
-        for i, skips_fea_opt in enumerate(skips_fea_opt):
+        for i, skip_fea_opt in enumerate(skips_fea_opt):
             skip_fea_dem = skips_fea_dem[i]
-            fea_fus = torch.cat([fea_fus, skips_fea_opt, skip_fea_dem], dim=1)  # concat skip features
+            fea_fus = torch.cat([fea_fus, skip_fea_opt, skip_fea_dem], dim=1)  # concat skip features
             fea_fus = self.DecoderBlocks[i+1](fea_fus)  # decode fused features
             fea_fus = self.up(fea_fus)  # upsample for next stage
         logit = self.outp(fea_fus)  # 1x256x256
         return logit
 
 if __name__ == '__main__':
-    model = u2net_timm(num_bands_b1=6, num_bands_b2=1, backbone_name='resnet34')
+    model = u2net_timm(num_bands_b1=6, 
+                        num_bands_b2=1, 
+                        # backbone_name='resnet34', 
+                        backbone_name='efficientnet_b0',
+                        pretrained=True)
     x = torch.randn(2, 7, 256, 256)  # batch_size=2, num_bands=7, H=W=256
     out = model(x)
     print(out.shape)  # should be [2, 1, 256, 256] 
-
 
 

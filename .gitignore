@@ -5,3 +5,7 @@ data/result/
 model/trained/
 github_repo 
 weights/
+model/timm_safetensors_weights/
+
+
+

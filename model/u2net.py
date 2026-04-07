@@ -8,10 +8,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-def conv3x3_bn_relu(in_channels, out_channels):
+def conv(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
         # nn.BatchNorm2d(out_channels),
+        # nn.GroupNorm(8, out_channels),  # group normalization        
         nn.ReLU(inplace=True)
         )
 
@@ -28,21 +29,21 @@ class u2net(nn.Module):
         self.up = nn.Upsample(scale_factor=2, mode='nearest')  # upsample layer
         ## encoder part
         ### branch 1
-        self.down_conv1_b1 = conv3x3_bn_relu(self.num_bands_b1, 16)        
-        self.down_conv2_b1 = conv3x3_bn_relu(16, 32)
-        self.down_conv3_b1 = conv3x3_bn_relu(32, 64)
-        self.down_conv4_b1 = conv3x3_bn_relu(64, 128)
+        self.down_conv1_b1 = conv(self.num_bands_b1, 16)        
+        self.down_conv2_b1 = conv(16, 32)
+        self.down_conv3_b1 = conv(32, 64)
+        self.down_conv4_b1 = conv(64, 128)
         ### branch 2
-        self.down_conv1_b2 = conv3x3_bn_relu(self.num_bands_b2, 16)
-        self.down_conv2_b2 = conv3x3_bn_relu(16, 32)
-        self.down_conv3_b2 = conv3x3_bn_relu(32, 64)
-        self.down_conv4_b2 = conv3x3_bn_relu(64, 128)
+        self.down_conv1_b2 = conv(self.num_bands_b2, 16)  # for DEM, no batch norm
+        self.down_conv2_b2 = conv(16, 32)
+        self.down_conv3_b2 = conv(32, 64)
+        self.down_conv4_b2 = conv(64, 128)
         ## decoder part (fused features)
         ## fusion 
-        self.decoder4 = conv3x3_bn_relu(256, 64)   # in: 
-        self.decoder3 = conv3x3_bn_relu(192, 64)   # in: 
-        self.decoder2 = conv3x3_bn_relu(128, 64)   # in: up(64) + fused(64)
-        self.decoder1 = conv3x3_bn_relu(96, 32)   # in: up(64) + fused(32)
+        self.decoder4 = conv(256, 64)   # in: 
+        self.decoder3 = conv(192, 64)   # in: 
+        self.decoder2 = conv(128, 64)   # in: up(64) + fused(64)
+        self.decoder1 = conv(96, 32)   # in: up(64) + fused(32)
         self.outp = nn.Sequential(
                         nn.Conv2d(32, 1, kernel_size=3, padding=1),
                         ) 
