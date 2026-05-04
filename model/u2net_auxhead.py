@@ -69,7 +69,6 @@ class u2net_(nn.Module):
         self.aux3 = AuxHead(32)   # decoder level3 输出，1/2
         self.outp = nn.Sequential(
                         nn.Conv2d(32, 1, kernel_size=3, padding=1),
-                        nn.Sigmoid()
                         ) 
 
     def forward(self, x):       ## input size: 7x256x256
@@ -105,26 +104,26 @@ class u2net_(nn.Module):
         x2_up = torch.cat([self.up(x2_decoder), x1_b1, x1_b2], dim=1)   # 64+16+16
         x1_decoder = self.up_conv3(x2_up)        #  32
         x1_up = self.up(x1_decoder)              #  
-        prob = self.outp(x1_up)                  #  1
+        logit = self.outp(x1_up)                  #  1
         if self.training:
             aux1 = self.aux1(x3_decoder, (H0, W0))
             aux2 = self.aux2(x2_decoder, (H0, W0))
             aux3 = self.aux3(x1_decoder, (H0, W0))
-            return prob, aux1, aux2, aux3
-        return prob          
+            return logit, aux1, aux2, aux3
+        return logit          
     
 if __name__ == "__main__":
     model = u2net_(num_bands_b1=3, num_bands_b2=4)
     x = torch.randn(2, 7, 256, 256)  # batch_size=2, num_bands=7, H=256, W=256
     model.train()
-    prob, aux1, aux2, aux3 = model(x)
+    logit, aux1, aux2, aux3 = model(x)
     print("Output shapes (training mode):")
-    print("Prob:", prob.shape)      # (2, 1, 256, 256)
+    print("Logit:", logit.shape)      # (2, 1, 256, 256)
     print("Aux1:", aux1.shape)      # (2, 1, 256, 256)
     print("Aux2:", aux2.shape)      # (2, 1, 256, 256)
     print("Aux3:", aux3.shape)      # (2, 1, 256, 256)
     model.eval()
     with torch.no_grad():
-        prob = model(x)
+        logit = model(x)
     print("\nOutput shape (inference mode):")
-    print("Prob:", prob.shape)      # (2, 1, 256, 256)
+    print("Logit:", logit.shape)      # (2, 1, 256, 256)

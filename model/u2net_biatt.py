@@ -12,7 +12,7 @@ import torch.nn.functional as F
 def conv3x3_bn_relu(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
-        nn.BatchNorm2d(out_channels),
+        # nn.BatchNorm2d(out_channels),
         nn.ReLU(inplace=True)
         )
 
@@ -183,7 +183,6 @@ class u2net_biatt(nn.Module):
 
         self.outp = nn.Sequential(
                         nn.Conv2d(64, 1, kernel_size=3, padding=1),
-                        nn.Sigmoid()
                         ) 
 
     def forward(self, x):       ## input size: 7x256x256
@@ -231,8 +230,8 @@ class u2net_biatt(nn.Module):
         x1 = self.up_conv1(x1)  ##  64
 
         x1 = self.up(x1)            #
-        prob = self.outp(x1)           # 1
-        return prob          
+        logit = self.outp(x1)           # 1
+        return logit          
 
 
 if __name__ == '__main__':

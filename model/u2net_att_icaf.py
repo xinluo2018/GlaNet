@@ -64,7 +64,6 @@ class u2net_att_icaf(nn.Module):
         
         self.outp = nn.Sequential(
                         nn.Conv2d(288, 1, kernel_size=3, padding=1),
-                        nn.Sigmoid()
                         ) 
 
     def forward(self, x):       ## input size: 7x256x256
@@ -112,9 +111,8 @@ class u2net_att_icaf(nn.Module):
         x1_fuse_att = torch.cat([x2_fuse_att_up, x1_b1, x1_b2], dim=1)   # 224+32+32
         x1_fuse_att_up = self.up(x1_fuse_att)            # 288
         # output
-        prob = self.outp(x1_fuse_att_up)           # 1
-
-        return prob  
+        logit = self.outp(x1_fuse_att_up)           # 1
+        return logit  
 
 if __name__ == '__main__':
     model = u2net_att_icaf(num_bands_b1=6, num_bands_b2=1)

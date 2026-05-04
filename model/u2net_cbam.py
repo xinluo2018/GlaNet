@@ -16,7 +16,7 @@ except ImportError:
 def conv3x3_bn_relu(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
-        nn.BatchNorm2d(out_channels),
+        # nn.BatchNorm2d(out_channels),
         nn.ReLU(inplace=True)
         )
 
@@ -52,7 +52,6 @@ class u2net_cbam(nn.Module):
         
         self.outp = nn.Sequential(
                         nn.Conv2d(32, 1, kernel_size=3, padding=1),
-                        nn.Sigmoid()
                         ) 
 
     def forward(self, x):       ## input size: 7x256x256
@@ -91,8 +90,8 @@ class u2net_cbam(nn.Module):
         x2_up = torch.cat([self.up(x2_up), x1_b1, x1_b2], dim=1)   # 64+16+16
         x1_up = self.up_conv3(x2_up)        #  32
         x1_up = self.up(x1_up)              #  
-        prob = self.outp(x1_up)           # 1
-        return prob          
+        logit = self.outp(x1_up)           # 1
+        return logit          
 
 if __name__ == "__main__":
     model = u2net_cbam(num_bands_b1=3, num_bands_b2=4)

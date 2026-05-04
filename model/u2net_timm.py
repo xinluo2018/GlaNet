@@ -12,16 +12,14 @@ def conv3x3_bn_relu(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
         nn.BatchNorm2d(out_channels),
-        nn.ReLU(inplace=True)
+        nn.ReLU(inplace=True),
         )
-
-
 
 class u2net_timm(nn.Module):
     def __init__(self, num_bands_b1, 
                         num_bands_b2, 
                         backbone_name='resnet34', 
-                        pretrained=False):
+                        pretrained=True):
         '''
         num_bands_b1: number of bands for branch 1 (e.g., scene image)
         num_bands_b2: number of bands for branch 2 (e.g., DEM)
@@ -30,7 +28,8 @@ class u2net_timm(nn.Module):
         self.num_bands_b1 = num_bands_b1
         self.num_bands_b2 = num_bands_b2
         self.decode_channels = [64, 64, 64, 64, 32]  # decoder channels for each stage
-        self.up = nn.Upsample(scale_factor=2, mode='nearest')  # upsample layer
+        # self.decode_channels = [128, 128, 128, 128, 64]  # decoder channels for each stage
+        self.up = nn.Upsample(scale_factor=2,  mode='bilinear', align_corners=True)  # upsample layer
 
         ## encoder part
         self.encoder_opt = timm.create_model(backbone_name, 

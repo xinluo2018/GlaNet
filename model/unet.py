@@ -11,7 +11,7 @@ import torch.nn.functional as F
 def conv3x3_bn_relu(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
-        nn.BatchNorm2d(out_channels),
+        # nn.BatchNorm2d(out_channels),
         nn.ReLU(inplace=True)
         )
 
