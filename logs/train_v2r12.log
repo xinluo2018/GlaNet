@@ -1,0 +1,977 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Unexpected keys (bn2.num_batches_tracked, bn2.bias, bn2.running_mean, bn2.running_var, bn2.weight, classifier.bias, classifier.weight, conv_head.weight) found while loading pretrained weights. This may be expected if model is being adapted.
+Unexpected keys (bn2.num_batches_tracked, bn2.bias, bn2.running_mean, bn2.running_var, bn2.weight, classifier.bias, classifier.weight, conv_head.weight) found while loading pretrained weights. This may be expected if model is being adapted.
+Unexpected keys (bn2.num_batches_tracked, bn2.bias, bn2.running_mean, bn2.running_var, bn2.weight, classifier.bias, classifier.weight, conv_head.weight) found while loading pretrained weights. This may be expected if model is being adapted.
+train scenes: 52
+vali patch 512: 117
+Output channels from encoder stages: [16, 24, 40, 112, 320]
+newly added parameters and are randomly initialized (120):
+  - cross_layers_4.blocks.0.self_attn_d.cpb_mlp.0.bias
+  - cross_layers_4.blocks.0.self_attn_d.cpb_mlp.0.weight
+  - cross_layers_4.blocks.0.self_attn_d.cpb_mlp.2.weight
+  - cross_layers_4.blocks.0.self_attn_d.kv_proj.bias
+  - cross_layers_4.blocks.0.self_attn_d.kv_proj.weight
+  - cross_layers_4.blocks.0.self_attn_d.logit_scale
+  - cross_layers_4.blocks.0.self_attn_d.output_proj.bias
+  - cross_layers_4.blocks.0.self_attn_d.output_proj.weight
+  - cross_layers_4.blocks.0.self_attn_d.q_proj.bias
+  - cross_layers_4.blocks.0.self_attn_d.q_proj.weight
+  - cross_layers_4.blocks.0.self_attn_x.cpb_mlp.0.bias
+  - cross_layers_4.blocks.0.self_attn_x.cpb_mlp.0.weight
+  - cross_layers_4.blocks.0.self_attn_x.cpb_mlp.2.weight
+  - cross_layers_4.blocks.0.self_attn_x.kv_proj.bias
+  - cross_layers_4.blocks.0.self_attn_x.kv_proj.weight
+  - cross_layers_4.blocks.0.self_attn_x.logit_scale
+  - cross_layers_4.blocks.0.self_attn_x.output_proj.bias
+  - cross_layers_4.blocks.0.self_attn_x.output_proj.weight
+  - cross_layers_4.blocks.0.self_attn_x.q_proj.bias
+  - cross_layers_4.blocks.0.self_attn_x.q_proj.weight
+  - cross_layers_4.blocks.0.self_attn_y.cpb_mlp.0.bias
+  - cross_layers_4.blocks.0.self_attn_y.cpb_mlp.0.weight
+  - cross_layers_4.blocks.0.self_attn_y.cpb_mlp.2.weight
+  - cross_layers_4.blocks.0.self_attn_y.kv_proj.bias
+  - cross_layers_4.blocks.0.self_attn_y.kv_proj.weight
+  - cross_layers_4.blocks.0.self_attn_y.logit_scale
+  - cross_layers_4.blocks.0.self_attn_y.output_proj.bias
+  - cross_layers_4.blocks.0.self_attn_y.output_proj.weight
+  - cross_layers_4.blocks.0.self_attn_y.q_proj.bias
+  - cross_layers_4.blocks.0.self_attn_y.q_proj.weight
+  - cross_layers_4.blocks.1.self_attn_d.cpb_mlp.0.bias
+  - cross_layers_4.blocks.1.self_attn_d.cpb_mlp.0.weight
+  - cross_layers_4.blocks.1.self_attn_d.cpb_mlp.2.weight
+  - cross_layers_4.blocks.1.self_attn_d.kv_proj.bias
+  - cross_layers_4.blocks.1.self_attn_d.kv_proj.weight
+  - cross_layers_4.blocks.1.self_attn_d.logit_scale
+  - cross_layers_4.blocks.1.self_attn_d.output_proj.bias
+  - cross_layers_4.blocks.1.self_attn_d.output_proj.weight
+  - cross_layers_4.blocks.1.self_attn_d.q_proj.bias
+  - cross_layers_4.blocks.1.self_attn_d.q_proj.weight
+  - cross_layers_4.blocks.1.self_attn_x.cpb_mlp.0.bias
+  - cross_layers_4.blocks.1.self_attn_x.cpb_mlp.0.weight
+  - cross_layers_4.blocks.1.self_attn_x.cpb_mlp.2.weight
+  - cross_layers_4.blocks.1.self_attn_x.kv_proj.bias
+  - cross_layers_4.blocks.1.self_attn_x.kv_proj.weight
+  - cross_layers_4.blocks.1.self_attn_x.logit_scale
+  - cross_layers_4.blocks.1.self_attn_x.output_proj.bias
+  - cross_layers_4.blocks.1.self_attn_x.output_proj.weight
+  - cross_layers_4.blocks.1.self_attn_x.q_proj.bias
+  - cross_layers_4.blocks.1.self_attn_x.q_proj.weight
+  - cross_layers_4.blocks.1.self_attn_y.cpb_mlp.0.bias
+  - cross_layers_4.blocks.1.self_attn_y.cpb_mlp.0.weight
+  - cross_layers_4.blocks.1.self_attn_y.cpb_mlp.2.weight
+  - cross_layers_4.blocks.1.self_attn_y.kv_proj.bias
+  - cross_layers_4.blocks.1.self_attn_y.kv_proj.weight
+  - cross_layers_4.blocks.1.self_attn_y.logit_scale
+  - cross_layers_4.blocks.1.self_attn_y.output_proj.bias
+  - cross_layers_4.blocks.1.self_attn_y.output_proj.weight
+  - cross_layers_4.blocks.1.self_attn_y.q_proj.bias
+  - cross_layers_4.blocks.1.self_attn_y.q_proj.weight
+  - cross_layers_4.blocks.2.self_attn_d.cpb_mlp.0.bias
+  - cross_layers_4.blocks.2.self_attn_d.cpb_mlp.0.weight
+  - cross_layers_4.blocks.2.self_attn_d.cpb_mlp.2.weight
+  - cross_layers_4.blocks.2.self_attn_d.kv_proj.bias
+  - cross_layers_4.blocks.2.self_attn_d.kv_proj.weight
+  - cross_layers_4.blocks.2.self_attn_d.logit_scale
+  - cross_layers_4.blocks.2.self_attn_d.output_proj.bias
+  - cross_layers_4.blocks.2.self_attn_d.output_proj.weight
+  - cross_layers_4.blocks.2.self_attn_d.q_proj.bias
+  - cross_layers_4.blocks.2.self_attn_d.q_proj.weight
+  - cross_layers_4.blocks.2.self_attn_x.cpb_mlp.0.bias
+  - cross_layers_4.blocks.2.self_attn_x.cpb_mlp.0.weight
+  - cross_layers_4.blocks.2.self_attn_x.cpb_mlp.2.weight
+  - cross_layers_4.blocks.2.self_attn_x.kv_proj.bias
+  - cross_layers_4.blocks.2.self_attn_x.kv_proj.weight
+  - cross_layers_4.blocks.2.self_attn_x.logit_scale
+  - cross_layers_4.blocks.2.self_attn_x.output_proj.bias
+  - cross_layers_4.blocks.2.self_attn_x.output_proj.weight
+  - cross_layers_4.blocks.2.self_attn_x.q_proj.bias
+  - cross_layers_4.blocks.2.self_attn_x.q_proj.weight
+  - cross_layers_4.blocks.2.self_attn_y.cpb_mlp.0.bias
+  - cross_layers_4.blocks.2.self_attn_y.cpb_mlp.0.weight
+  - cross_layers_4.blocks.2.self_attn_y.cpb_mlp.2.weight
+  - cross_layers_4.blocks.2.self_attn_y.kv_proj.bias
+  - cross_layers_4.blocks.2.self_attn_y.kv_proj.weight
+  - cross_layers_4.blocks.2.self_attn_y.logit_scale
+  - cross_layers_4.blocks.2.self_attn_y.output_proj.bias
+  - cross_layers_4.blocks.2.self_attn_y.output_proj.weight
+  - cross_layers_4.blocks.2.self_attn_y.q_proj.bias
+  - cross_layers_4.blocks.2.self_attn_y.q_proj.weight
+  - cross_layers_4.blocks.3.self_attn_d.cpb_mlp.0.bias
+  - cross_layers_4.blocks.3.self_attn_d.cpb_mlp.0.weight
+  - cross_layers_4.blocks.3.self_attn_d.cpb_mlp.2.weight
+  - cross_layers_4.blocks.3.self_attn_d.kv_proj.bias
+  - cross_layers_4.blocks.3.self_attn_d.kv_proj.weight
+  - cross_layers_4.blocks.3.self_attn_d.logit_scale
+  - cross_layers_4.blocks.3.self_attn_d.output_proj.bias
+  - cross_layers_4.blocks.3.self_attn_d.output_proj.weight
+  - cross_layers_4.blocks.3.self_attn_d.q_proj.bias
+  - cross_layers_4.blocks.3.self_attn_d.q_proj.weight
+  - cross_layers_4.blocks.3.self_attn_x.cpb_mlp.0.bias
+  - cross_layers_4.blocks.3.self_attn_x.cpb_mlp.0.weight
+  - cross_layers_4.blocks.3.self_attn_x.cpb_mlp.2.weight
+  - cross_layers_4.blocks.3.self_attn_x.kv_proj.bias
+  - cross_layers_4.blocks.3.self_attn_x.kv_proj.weight
+  - cross_layers_4.blocks.3.self_attn_x.logit_scale
+  - cross_layers_4.blocks.3.self_attn_x.output_proj.bias
+  - cross_layers_4.blocks.3.self_attn_x.output_proj.weight
+  - cross_layers_4.blocks.3.self_attn_x.q_proj.bias
+  - cross_layers_4.blocks.3.self_attn_x.q_proj.weight
+  - cross_layers_4.blocks.3.self_attn_y.cpb_mlp.0.bias
+  - cross_layers_4.blocks.3.self_attn_y.cpb_mlp.0.weight
+  - cross_layers_4.blocks.3.self_attn_y.cpb_mlp.2.weight
+  - cross_layers_4.blocks.3.self_attn_y.kv_proj.bias
+  - cross_layers_4.blocks.3.self_attn_y.kv_proj.weight
+  - cross_layers_4.blocks.3.self_attn_y.logit_scale
+  - cross_layers_4.blocks.3.self_attn_y.output_proj.bias
+  - cross_layers_4.blocks.3.self_attn_y.output_proj.weight
+  - cross_layers_4.blocks.3.self_attn_y.q_proj.bias
+  - cross_layers_4.blocks.3.self_attn_y.q_proj.weight
+loaded 1453/1573 tensors from model/trained/u3net_cross_fusion_v2_best09548.pth
+Ep0: tra-> Loss:0.240,Oa:0.994,Miou:0.978, time:119.7s
+Ep1: tra-> Loss:0.237,Oa:0.993,Miou:0.972, val-> Loss:0.385,Oa:0.990,Miou:0.954,MiouEMA:0.9543, lr:1.00e-04,time:26.7s
+  >> saved RAW ckpt, val miou 0.9545
+Ep2: tra-> Loss:0.244,Oa:0.993,Miou:0.975, time:4.4s
+Ep3: tra-> Loss:0.208,Oa:0.995,Miou:0.982, val-> Loss:0.384,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:8.1s
+Ep4: tra-> Loss:0.200,Oa:0.994,Miou:0.981, time:3.9s
+Ep5: tra-> Loss:0.251,Oa:0.995,Miou:0.981, val-> Loss:0.410,Oa:0.990,Miou:0.950,MiouEMA:0.9522, lr:1.00e-04,time:8.4s
+Ep6: tra-> Loss:0.241,Oa:0.996,Miou:0.976, time:3.9s
+Ep7: tra-> Loss:0.220,Oa:0.996,Miou:0.983, val-> Loss:0.415,Oa:0.989,Miou:0.948,MiouEMA:0.9503, lr:1.00e-04,time:9.5s
+Ep8: tra-> Loss:0.382,Oa:0.996,Miou:0.982, time:3.8s
+Ep9: tra-> Loss:0.255,Oa:0.994,Miou:0.979, val-> Loss:0.412,Oa:0.990,Miou:0.951,MiouEMA:0.9511, lr:1.00e-04,time:9.2s
+Ep10: tra-> Loss:0.278,Oa:0.995,Miou:0.979, time:3.8s
+Ep11: tra-> Loss:0.226,Oa:0.995,Miou:0.977, val-> Loss:0.380,Oa:0.990,Miou:0.951,MiouEMA:0.9527, lr:1.00e-04,time:8.9s
+Ep12: tra-> Loss:0.258,Oa:0.995,Miou:0.980, time:4.1s
+Ep13: tra-> Loss:0.235,Oa:0.994,Miou:0.979, val-> Loss:0.373,Oa:0.990,Miou:0.952,MiouEMA:0.9523, lr:1.00e-04,time:9.4s
+Ep14: tra-> Loss:0.221,Oa:0.996,Miou:0.981, time:4.9s
+Ep15: tra-> Loss:0.202,Oa:0.994,Miou:0.978, val-> Loss:0.382,Oa:0.990,Miou:0.953,MiouEMA:0.9528, lr:1.00e-04,time:8.5s
+Ep16: tra-> Loss:0.224,Oa:0.995,Miou:0.981, time:4.3s
+Ep17: tra-> Loss:0.296,Oa:0.994,Miou:0.975, val-> Loss:0.376,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.2s
+Ep18: tra-> Loss:0.223,Oa:0.994,Miou:0.973, time:4.3s
+Ep19: tra-> Loss:0.206,Oa:0.995,Miou:0.979, val-> Loss:0.392,Oa:0.990,Miou:0.953,MiouEMA:0.9529, lr:1.00e-04,time:8.4s
+Ep20: tra-> Loss:0.201,Oa:0.995,Miou:0.982, time:4.3s
+Ep21: tra-> Loss:0.253,Oa:0.996,Miou:0.982, val-> Loss:0.383,Oa:0.990,Miou:0.952,MiouEMA:0.9529, lr:1.00e-04,time:8.6s
+Ep22: tra-> Loss:0.220,Oa:0.995,Miou:0.981, time:4.4s
+Ep23: tra-> Loss:0.258,Oa:0.994,Miou:0.977, val-> Loss:0.383,Oa:0.990,Miou:0.953,MiouEMA:0.9530, lr:1.00e-04,time:8.9s
+Ep24: tra-> Loss:0.262,Oa:0.995,Miou:0.975, time:4.5s
+Ep25: tra-> Loss:0.211,Oa:0.995,Miou:0.977, val-> Loss:0.386,Oa:0.990,Miou:0.953,MiouEMA:0.9529, lr:1.00e-04,time:8.6s
+Ep26: tra-> Loss:0.220,Oa:0.996,Miou:0.983, time:4.9s
+Ep27: tra-> Loss:0.254,Oa:0.997,Miou:0.986, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9529, lr:1.00e-04,time:8.5s
+Ep28: tra-> Loss:0.229,Oa:0.994,Miou:0.979, time:4.3s
+Ep29: tra-> Loss:0.240,Oa:0.995,Miou:0.979, val-> Loss:0.373,Oa:0.990,Miou:0.952,MiouEMA:0.9528, lr:1.00e-04,time:8.2s
+Ep30: tra-> Loss:0.216,Oa:0.995,Miou:0.983, time:4.4s
+Ep31: tra-> Loss:0.243,Oa:0.994,Miou:0.971, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9529, lr:1.00e-04,time:8.6s
+Ep32: tra-> Loss:0.244,Oa:0.994,Miou:0.979, time:4.3s
+Ep33: tra-> Loss:0.203,Oa:0.994,Miou:0.978, val-> Loss:0.389,Oa:0.990,Miou:0.952,MiouEMA:0.9530, lr:1.00e-04,time:8.8s
+Ep34: tra-> Loss:0.255,Oa:0.995,Miou:0.979, time:4.1s
+Ep35: tra-> Loss:0.275,Oa:0.996,Miou:0.982, val-> Loss:0.383,Oa:0.990,Miou:0.953,MiouEMA:0.9530, lr:1.00e-04,time:8.6s
+Ep36: tra-> Loss:0.222,Oa:0.993,Miou:0.979, time:4.8s
+Ep37: tra-> Loss:0.237,Oa:0.993,Miou:0.979, val-> Loss:0.384,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.7s
+Ep38: tra-> Loss:0.201,Oa:0.995,Miou:0.983, time:4.4s
+Ep39: tra-> Loss:0.218,Oa:0.996,Miou:0.983, val-> Loss:0.381,Oa:0.990,Miou:0.954,MiouEMA:0.9535, lr:1.00e-04,time:8.6s
+Ep40: tra-> Loss:0.228,Oa:0.995,Miou:0.980, time:3.9s
+Ep41: tra-> Loss:0.225,Oa:0.995,Miou:0.973, val-> Loss:0.365,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.7s
+Ep42: tra-> Loss:0.238,Oa:0.996,Miou:0.980, time:4.0s
+Ep43: tra-> Loss:0.189,Oa:0.996,Miou:0.983, val-> Loss:0.371,Oa:0.990,Miou:0.953,MiouEMA:0.9539, lr:1.00e-04,time:8.5s
+Ep44: tra-> Loss:0.226,Oa:0.995,Miou:0.975, time:3.8s
+Ep45: tra-> Loss:0.195,Oa:0.995,Miou:0.978, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9537, lr:1.00e-04,time:9.3s
+Ep46: tra-> Loss:0.268,Oa:0.994,Miou:0.972, time:3.8s
+Ep47: tra-> Loss:0.168,Oa:0.996,Miou:0.986, val-> Loss:0.373,Oa:0.990,Miou:0.952,MiouEMA:0.9535, lr:1.00e-04,time:8.6s
+Ep48: tra-> Loss:0.209,Oa:0.996,Miou:0.983, time:5.0s
+Ep49: tra-> Loss:0.221,Oa:0.994,Miou:0.978, val-> Loss:0.379,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep50: tra-> Loss:0.223,Oa:0.995,Miou:0.978, time:4.0s
+Ep51: tra-> Loss:0.214,Oa:0.995,Miou:0.978, val-> Loss:0.375,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:9.1s
+Ep52: tra-> Loss:0.191,Oa:0.995,Miou:0.984, time:4.4s
+Ep53: tra-> Loss:0.224,Oa:0.996,Miou:0.984, val-> Loss:0.380,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.3s
+Ep54: tra-> Loss:0.214,Oa:0.994,Miou:0.975, time:4.7s
+Ep55: tra-> Loss:0.215,Oa:0.996,Miou:0.980, val-> Loss:0.383,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.8s
+Ep56: tra-> Loss:0.196,Oa:0.996,Miou:0.983, time:4.0s
+Ep57: tra-> Loss:0.230,Oa:0.997,Miou:0.986, val-> Loss:0.375,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.1s
+Ep58: tra-> Loss:0.253,Oa:0.996,Miou:0.980, time:4.4s
+Ep59: tra-> Loss:0.269,Oa:0.994,Miou:0.975, val-> Loss:0.374,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:8.4s
+Ep60: tra-> Loss:0.203,Oa:0.995,Miou:0.981, time:4.7s
+Ep61: tra-> Loss:0.245,Oa:0.996,Miou:0.982, val-> Loss:0.376,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:8.3s
+Ep62: tra-> Loss:0.229,Oa:0.995,Miou:0.980, time:4.4s
+Ep63: tra-> Loss:0.233,Oa:0.993,Miou:0.977, val-> Loss:0.377,Oa:0.990,Miou:0.954,MiouEMA:0.9538, lr:1.00e-04,time:8.8s
+Ep64: tra-> Loss:0.192,Oa:0.995,Miou:0.981, time:3.9s
+Ep65: tra-> Loss:0.205,Oa:0.995,Miou:0.983, val-> Loss:0.378,Oa:0.990,Miou:0.954,MiouEMA:0.9538, lr:1.00e-04,time:9.3s
+Ep66: tra-> Loss:0.229,Oa:0.995,Miou:0.975, time:3.9s
+Ep67: tra-> Loss:0.193,Oa:0.996,Miou:0.982, val-> Loss:0.379,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.4s
+Ep68: tra-> Loss:0.197,Oa:0.994,Miou:0.981, time:4.2s
+Ep69: tra-> Loss:0.211,Oa:0.996,Miou:0.983, val-> Loss:0.383,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.9s
+Ep70: tra-> Loss:0.241,Oa:0.994,Miou:0.972, time:3.8s
+Ep71: tra-> Loss:0.224,Oa:0.995,Miou:0.980, val-> Loss:0.389,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.3s
+Ep72: tra-> Loss:0.231,Oa:0.995,Miou:0.978, time:4.8s
+Ep73: tra-> Loss:0.212,Oa:0.995,Miou:0.979, val-> Loss:0.388,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:9.5s
+Ep74: tra-> Loss:0.204,Oa:0.996,Miou:0.983, time:4.9s
+Ep75: tra-> Loss:0.224,Oa:0.995,Miou:0.979, val-> Loss:0.396,Oa:0.990,Miou:0.953,MiouEMA:0.9538, lr:1.00e-04,time:8.3s
+Ep76: tra-> Loss:0.204,Oa:0.996,Miou:0.982, time:4.3s
+Ep77: tra-> Loss:0.242,Oa:0.995,Miou:0.981, val-> Loss:0.381,Oa:0.990,Miou:0.954,MiouEMA:0.9538, lr:1.00e-04,time:8.5s
+Ep78: tra-> Loss:0.222,Oa:0.994,Miou:0.976, time:4.9s
+Ep79: tra-> Loss:0.212,Oa:0.994,Miou:0.975, val-> Loss:0.384,Oa:0.990,Miou:0.954,MiouEMA:0.9539, lr:1.00e-04,time:9.4s
+Ep80: tra-> Loss:0.208,Oa:0.996,Miou:0.980, time:3.8s
+Ep81: tra-> Loss:0.226,Oa:0.994,Miou:0.976, val-> Loss:0.379,Oa:0.990,Miou:0.954,MiouEMA:0.9539, lr:1.00e-04,time:8.7s
+Ep82: tra-> Loss:0.200,Oa:0.995,Miou:0.984, time:3.8s
+Ep83: tra-> Loss:0.206,Oa:0.995,Miou:0.980, val-> Loss:0.377,Oa:0.990,Miou:0.954,MiouEMA:0.9539, lr:1.00e-04,time:8.6s
+Ep84: tra-> Loss:0.227,Oa:0.996,Miou:0.982, time:4.2s
+Ep85: tra-> Loss:0.209,Oa:0.995,Miou:0.975, val-> Loss:0.394,Oa:0.990,Miou:0.952,MiouEMA:0.9538, lr:1.00e-04,time:9.3s
+Ep86: tra-> Loss:0.213,Oa:0.995,Miou:0.978, time:4.7s
+Ep87: tra-> Loss:0.231,Oa:0.995,Miou:0.983, val-> Loss:0.392,Oa:0.990,Miou:0.952,MiouEMA:0.9536, lr:1.00e-04,time:8.8s
+Ep88: tra-> Loss:0.233,Oa:0.995,Miou:0.974, time:3.7s
+Ep89: tra-> Loss:0.208,Oa:0.995,Miou:0.980, val-> Loss:0.379,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.6s
+Ep90: tra-> Loss:0.205,Oa:0.995,Miou:0.978, time:4.3s
+Ep91: tra-> Loss:0.211,Oa:0.995,Miou:0.980, val-> Loss:0.372,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.1s
+Ep92: tra-> Loss:0.207,Oa:0.995,Miou:0.979, time:3.8s
+Ep93: tra-> Loss:0.193,Oa:0.995,Miou:0.982, val-> Loss:0.377,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.4s
+Ep94: tra-> Loss:0.246,Oa:0.995,Miou:0.974, time:3.8s
+Ep95: tra-> Loss:0.239,Oa:0.995,Miou:0.982, val-> Loss:0.374,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.3s
+Ep96: tra-> Loss:0.232,Oa:0.995,Miou:0.979, time:4.5s
+Ep97: tra-> Loss:0.205,Oa:0.995,Miou:0.979, val-> Loss:0.378,Oa:0.990,Miou:0.953,MiouEMA:0.9533, lr:1.00e-04,time:8.1s
+Ep98: tra-> Loss:0.214,Oa:0.995,Miou:0.979, time:4.3s
+Ep99: tra-> Loss:0.213,Oa:0.995,Miou:0.980, val-> Loss:0.397,Oa:0.990,Miou:0.952,MiouEMA:0.9533, lr:1.00e-04,time:8.7s
+Ep100: tra-> Loss:0.250,Oa:0.994,Miou:0.975, time:4.6s
+Ep101: tra-> Loss:0.204,Oa:0.996,Miou:0.982, val-> Loss:0.403,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:9.4s
+Ep102: tra-> Loss:0.212,Oa:0.994,Miou:0.975, time:4.4s
+Ep103: tra-> Loss:0.214,Oa:0.995,Miou:0.977, val-> Loss:0.391,Oa:0.990,Miou:0.951,MiouEMA:0.9531, lr:1.00e-04,time:8.8s
+Ep104: tra-> Loss:0.209,Oa:0.994,Miou:0.976, time:4.4s
+Ep105: tra-> Loss:0.213,Oa:0.995,Miou:0.979, val-> Loss:0.389,Oa:0.990,Miou:0.950,MiouEMA:0.9529, lr:1.00e-04,time:8.7s
+Ep106: tra-> Loss:0.225,Oa:0.995,Miou:0.981, time:4.0s
+Ep107: tra-> Loss:0.273,Oa:0.994,Miou:0.981, val-> Loss:0.381,Oa:0.990,Miou:0.953,MiouEMA:0.9529, lr:1.00e-04,time:9.4s
+Ep108: tra-> Loss:0.191,Oa:0.996,Miou:0.983, time:5.0s
+Ep109: tra-> Loss:0.238,Oa:0.995,Miou:0.980, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9530, lr:1.00e-04,time:8.7s
+Ep110: tra-> Loss:0.205,Oa:0.994,Miou:0.979, time:4.4s
+Ep111: tra-> Loss:0.221,Oa:0.994,Miou:0.977, val-> Loss:0.374,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.9s
+Ep112: tra-> Loss:0.220,Oa:0.995,Miou:0.979, time:4.3s
+Ep113: tra-> Loss:0.192,Oa:0.996,Miou:0.981, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.6s
+Ep114: tra-> Loss:0.225,Oa:0.994,Miou:0.978, time:4.0s
+Ep115: tra-> Loss:0.190,Oa:0.996,Miou:0.982, val-> Loss:0.379,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.8s
+Ep116: tra-> Loss:0.268,Oa:0.995,Miou:0.975, time:3.7s
+Ep117: tra-> Loss:0.210,Oa:0.996,Miou:0.985, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.8s
+Ep118: tra-> Loss:0.201,Oa:0.994,Miou:0.977, time:4.2s
+Ep119: tra-> Loss:0.207,Oa:0.995,Miou:0.980, val-> Loss:0.386,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.9s
+Ep120: tra-> Loss:0.209,Oa:0.995,Miou:0.982, time:4.3s
+Ep121: tra-> Loss:0.223,Oa:0.995,Miou:0.979, val-> Loss:0.387,Oa:0.990,Miou:0.951,MiouEMA:0.9531, lr:1.00e-04,time:8.9s
+Ep122: tra-> Loss:0.218,Oa:0.995,Miou:0.979, time:3.8s
+Ep123: tra-> Loss:0.203,Oa:0.995,Miou:0.983, val-> Loss:0.393,Oa:0.990,Miou:0.951,MiouEMA:0.9530, lr:1.00e-04,time:8.7s
+Ep124: tra-> Loss:0.236,Oa:0.996,Miou:0.984, time:3.8s
+Ep125: tra-> Loss:0.259,Oa:0.995,Miou:0.974, val-> Loss:0.388,Oa:0.990,Miou:0.953,MiouEMA:0.9530, lr:1.00e-04,time:8.6s
+Ep126: tra-> Loss:0.209,Oa:0.996,Miou:0.982, time:4.0s
+Ep127: tra-> Loss:0.258,Oa:0.993,Miou:0.977, val-> Loss:0.401,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.2s
+Ep128: tra-> Loss:0.236,Oa:0.994,Miou:0.977, time:3.7s
+Ep129: tra-> Loss:0.236,Oa:0.995,Miou:0.974, val-> Loss:0.386,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.9s
+Ep130: tra-> Loss:0.245,Oa:0.995,Miou:0.978, time:4.9s
+Ep131: tra-> Loss:0.208,Oa:0.994,Miou:0.976, val-> Loss:0.386,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.2s
+Ep132: tra-> Loss:0.222,Oa:0.995,Miou:0.977, time:3.8s
+Ep133: tra-> Loss:0.235,Oa:0.995,Miou:0.974, val-> Loss:0.375,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.6s
+Ep134: tra-> Loss:0.218,Oa:0.996,Miou:0.982, time:4.6s
+Ep135: tra-> Loss:0.262,Oa:0.994,Miou:0.975, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.9s
+Ep136: tra-> Loss:0.231,Oa:0.995,Miou:0.979, time:4.9s
+Ep137: tra-> Loss:0.218,Oa:0.995,Miou:0.979, val-> Loss:0.381,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:9.4s
+Ep138: tra-> Loss:0.235,Oa:0.995,Miou:0.981, time:4.2s
+Ep139: tra-> Loss:0.199,Oa:0.995,Miou:0.983, val-> Loss:0.379,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.4s
+Ep140: tra-> Loss:0.186,Oa:0.996,Miou:0.981, time:4.1s
+Ep141: tra-> Loss:0.204,Oa:0.995,Miou:0.980, val-> Loss:0.389,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.7s
+Ep142: tra-> Loss:0.212,Oa:0.993,Miou:0.977, time:4.5s
+Ep143: tra-> Loss:0.235,Oa:0.995,Miou:0.981, val-> Loss:0.390,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.7s
+Ep144: tra-> Loss:0.246,Oa:0.995,Miou:0.978, time:3.8s
+Ep145: tra-> Loss:0.225,Oa:0.995,Miou:0.982, val-> Loss:0.402,Oa:0.990,Miou:0.951,MiouEMA:0.9532, lr:1.00e-04,time:8.3s
+Ep146: tra-> Loss:0.240,Oa:0.995,Miou:0.976, time:3.9s
+Ep147: tra-> Loss:0.231,Oa:0.993,Miou:0.973, val-> Loss:0.404,Oa:0.990,Miou:0.951,MiouEMA:0.9532, lr:1.00e-04,time:8.2s
+Ep148: tra-> Loss:0.239,Oa:0.993,Miou:0.976, time:4.4s
+Ep149: tra-> Loss:0.228,Oa:0.993,Miou:0.978, val-> Loss:0.395,Oa:0.990,Miou:0.951,MiouEMA:0.9532, lr:1.00e-04,time:8.7s
+Ep150: tra-> Loss:0.209,Oa:0.994,Miou:0.979, time:4.2s
+Ep151: tra-> Loss:0.218,Oa:0.995,Miou:0.976, val-> Loss:0.410,Oa:0.989,Miou:0.949,MiouEMA:0.9531, lr:1.00e-04,time:9.2s
+Ep152: tra-> Loss:0.207,Oa:0.995,Miou:0.985, time:3.8s
+Ep153: tra-> Loss:0.239,Oa:0.994,Miou:0.977, val-> Loss:0.415,Oa:0.989,Miou:0.949,MiouEMA:0.9530, lr:1.00e-04,time:8.4s
+Ep154: tra-> Loss:0.239,Oa:0.993,Miou:0.976, time:4.4s
+Ep155: tra-> Loss:0.227,Oa:0.995,Miou:0.979, val-> Loss:0.395,Oa:0.990,Miou:0.951,MiouEMA:0.9529, lr:1.00e-04,time:9.2s
+Ep156: tra-> Loss:0.329,Oa:0.994,Miou:0.980, time:4.0s
+Ep157: tra-> Loss:0.283,Oa:0.992,Miou:0.970, val-> Loss:0.425,Oa:0.989,Miou:0.945,MiouEMA:0.9529, lr:1.00e-04,time:8.7s
+Ep158: tra-> Loss:0.259,Oa:0.994,Miou:0.970, time:3.8s
+Ep159: tra-> Loss:0.322,Oa:0.995,Miou:0.980, val-> Loss:0.462,Oa:0.989,Miou:0.948,MiouEMA:0.9529, lr:1.00e-04,time:8.5s
+Ep160: tra-> Loss:0.252,Oa:0.994,Miou:0.977, time:4.4s
+Ep161: tra-> Loss:0.220,Oa:0.996,Miou:0.984, val-> Loss:0.436,Oa:0.989,Miou:0.949,MiouEMA:0.9528, lr:1.00e-04,time:8.3s
+Ep162: tra-> Loss:0.225,Oa:0.994,Miou:0.978, time:4.4s
+Ep163: tra-> Loss:0.232,Oa:0.994,Miou:0.979, val-> Loss:0.390,Oa:0.990,Miou:0.951,MiouEMA:0.9528, lr:1.00e-04,time:8.5s
+Ep164: tra-> Loss:0.214,Oa:0.993,Miou:0.976, time:3.8s
+Ep165: tra-> Loss:0.238,Oa:0.995,Miou:0.980, val-> Loss:0.392,Oa:0.990,Miou:0.951,MiouEMA:0.9527, lr:1.00e-04,time:8.5s
+Ep166: tra-> Loss:0.238,Oa:0.994,Miou:0.977, time:4.8s
+Ep167: tra-> Loss:0.213,Oa:0.994,Miou:0.977, val-> Loss:0.372,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.3s
+Ep168: tra-> Loss:0.217,Oa:0.994,Miou:0.978, time:4.2s
+Ep169: tra-> Loss:0.253,Oa:0.994,Miou:0.974, val-> Loss:0.365,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.2s
+Ep170: tra-> Loss:0.209,Oa:0.994,Miou:0.982, time:4.4s
+Ep171: tra-> Loss:0.232,Oa:0.995,Miou:0.979, val-> Loss:0.375,Oa:0.990,Miou:0.951,MiouEMA:0.9527, lr:1.00e-04,time:8.6s
+Ep172: tra-> Loss:0.227,Oa:0.996,Miou:0.979, time:3.8s
+Ep173: tra-> Loss:0.231,Oa:0.996,Miou:0.978, val-> Loss:0.392,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.6s
+Ep174: tra-> Loss:0.255,Oa:0.995,Miou:0.981, time:4.8s
+Ep175: tra-> Loss:0.222,Oa:0.994,Miou:0.981, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9526, lr:1.00e-04,time:8.6s
+Ep176: tra-> Loss:0.230,Oa:0.994,Miou:0.978, time:4.0s
+Ep177: tra-> Loss:0.230,Oa:0.994,Miou:0.976, val-> Loss:0.377,Oa:0.990,Miou:0.952,MiouEMA:0.9526, lr:1.00e-04,time:8.2s
+Ep178: tra-> Loss:0.237,Oa:0.995,Miou:0.982, time:3.9s
+Ep179: tra-> Loss:0.217,Oa:0.994,Miou:0.975, val-> Loss:0.386,Oa:0.990,Miou:0.950,MiouEMA:0.9526, lr:1.00e-04,time:8.5s
+Ep180: tra-> Loss:0.220,Oa:0.996,Miou:0.983, time:3.9s
+Ep181: tra-> Loss:0.197,Oa:0.995,Miou:0.983, val-> Loss:0.373,Oa:0.990,Miou:0.952,MiouEMA:0.9525, lr:1.00e-04,time:8.3s
+Ep182: tra-> Loss:0.221,Oa:0.995,Miou:0.979, time:3.8s
+Ep183: tra-> Loss:0.218,Oa:0.994,Miou:0.978, val-> Loss:0.377,Oa:0.990,Miou:0.952,MiouEMA:0.9525, lr:1.00e-04,time:8.4s
+Ep184: tra-> Loss:0.243,Oa:0.995,Miou:0.977, time:4.4s
+Ep185: tra-> Loss:0.205,Oa:0.996,Miou:0.983, val-> Loss:0.387,Oa:0.990,Miou:0.951,MiouEMA:0.9525, lr:1.00e-04,time:8.8s
+Ep186: tra-> Loss:0.223,Oa:0.994,Miou:0.977, time:4.0s
+Ep187: tra-> Loss:0.220,Oa:0.995,Miou:0.976, val-> Loss:0.376,Oa:0.990,Miou:0.952,MiouEMA:0.9525, lr:1.00e-04,time:8.5s
+Ep188: tra-> Loss:0.188,Oa:0.995,Miou:0.983, time:3.8s
+Ep189: tra-> Loss:0.237,Oa:0.996,Miou:0.983, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9525, lr:1.00e-04,time:8.3s
+Ep190: tra-> Loss:0.216,Oa:0.995,Miou:0.975, time:4.9s
+Ep191: tra-> Loss:0.201,Oa:0.996,Miou:0.982, val-> Loss:0.393,Oa:0.990,Miou:0.951,MiouEMA:0.9525, lr:1.00e-04,time:8.7s
+Ep192: tra-> Loss:0.195,Oa:0.996,Miou:0.983, time:4.9s
+Ep193: tra-> Loss:0.212,Oa:0.994,Miou:0.981, val-> Loss:0.389,Oa:0.990,Miou:0.952,MiouEMA:0.9525, lr:1.00e-04,time:8.1s
+Ep194: tra-> Loss:0.204,Oa:0.995,Miou:0.981, time:3.9s
+Ep195: tra-> Loss:0.226,Oa:0.995,Miou:0.981, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9526, lr:1.00e-04,time:8.9s
+Ep196: tra-> Loss:0.235,Oa:0.996,Miou:0.980, time:3.8s
+Ep197: tra-> Loss:0.217,Oa:0.995,Miou:0.977, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9526, lr:1.00e-04,time:8.8s
+Ep198: tra-> Loss:0.207,Oa:0.995,Miou:0.979, time:4.4s
+Ep199: tra-> Loss:0.212,Oa:0.994,Miou:0.979, val-> Loss:0.367,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:9.3s
+Ep200: tra-> Loss:0.232,Oa:0.996,Miou:0.985, time:4.3s
+Ep201: tra-> Loss:0.223,Oa:0.995,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.1s
+Ep202: tra-> Loss:0.239,Oa:0.994,Miou:0.975, time:4.4s
+Ep203: tra-> Loss:0.204,Oa:0.994,Miou:0.981, val-> Loss:0.374,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.7s
+Ep204: tra-> Loss:0.228,Oa:0.995,Miou:0.980, time:4.3s
+Ep205: tra-> Loss:0.198,Oa:0.996,Miou:0.982, val-> Loss:0.366,Oa:0.990,Miou:0.953,MiouEMA:0.9527, lr:1.00e-04,time:9.0s
+Ep206: tra-> Loss:0.221,Oa:0.994,Miou:0.983, time:4.3s
+Ep207: tra-> Loss:0.235,Oa:0.994,Miou:0.980, val-> Loss:0.369,Oa:0.990,Miou:0.952,MiouEMA:0.9527, lr:1.00e-04,time:8.0s
+Ep208: tra-> Loss:0.219,Oa:0.995,Miou:0.982, time:5.0s
+Ep209: tra-> Loss:0.224,Oa:0.995,Miou:0.978, val-> Loss:0.371,Oa:0.990,Miou:0.953,MiouEMA:0.9528, lr:1.00e-04,time:8.8s
+Ep210: tra-> Loss:0.219,Oa:0.994,Miou:0.974, time:4.9s
+Ep211: tra-> Loss:0.214,Oa:0.995,Miou:0.981, val-> Loss:0.372,Oa:0.990,Miou:0.953,MiouEMA:0.9528, lr:1.00e-04,time:8.7s
+Ep212: tra-> Loss:0.216,Oa:0.994,Miou:0.981, time:3.8s
+Ep213: tra-> Loss:0.224,Oa:0.995,Miou:0.979, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9529, lr:1.00e-04,time:8.7s
+Ep214: tra-> Loss:0.204,Oa:0.996,Miou:0.982, time:4.4s
+Ep215: tra-> Loss:0.198,Oa:0.995,Miou:0.983, val-> Loss:0.389,Oa:0.990,Miou:0.952,MiouEMA:0.9530, lr:1.00e-04,time:8.8s
+Ep216: tra-> Loss:0.202,Oa:0.994,Miou:0.979, time:4.2s
+Ep217: tra-> Loss:0.241,Oa:0.994,Miou:0.974, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9530, lr:1.00e-04,time:9.5s
+Ep218: tra-> Loss:0.191,Oa:0.997,Miou:0.985, time:4.1s
+Ep219: tra-> Loss:0.196,Oa:0.996,Miou:0.981, val-> Loss:0.380,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.7s
+Ep220: tra-> Loss:0.235,Oa:0.994,Miou:0.975, time:3.9s
+Ep221: tra-> Loss:0.255,Oa:0.995,Miou:0.972, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:9.4s
+Ep222: tra-> Loss:0.213,Oa:0.995,Miou:0.983, time:4.3s
+Ep223: tra-> Loss:0.230,Oa:0.994,Miou:0.975, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.8s
+Ep224: tra-> Loss:0.218,Oa:0.993,Miou:0.978, time:4.5s
+Ep225: tra-> Loss:0.272,Oa:0.995,Miou:0.974, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.9s
+Ep226: tra-> Loss:0.220,Oa:0.995,Miou:0.978, time:4.1s
+Ep227: tra-> Loss:0.204,Oa:0.995,Miou:0.981, val-> Loss:0.390,Oa:0.990,Miou:0.951,MiouEMA:0.9533, lr:1.00e-04,time:9.4s
+Ep228: tra-> Loss:0.227,Oa:0.992,Miou:0.972, time:4.0s
+Ep229: tra-> Loss:0.204,Oa:0.996,Miou:0.985, val-> Loss:0.399,Oa:0.990,Miou:0.950,MiouEMA:0.9533, lr:1.00e-04,time:8.0s
+Ep230: tra-> Loss:0.219,Oa:0.994,Miou:0.978, time:4.1s
+Ep231: tra-> Loss:0.234,Oa:0.995,Miou:0.972, val-> Loss:0.379,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.8s
+Ep232: tra-> Loss:0.207,Oa:0.994,Miou:0.981, time:4.5s
+Ep233: tra-> Loss:0.192,Oa:0.996,Miou:0.985, val-> Loss:0.381,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.2s
+Ep234: tra-> Loss:0.249,Oa:0.994,Miou:0.975, time:4.9s
+Ep235: tra-> Loss:0.181,Oa:0.995,Miou:0.982, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.2s
+Ep236: tra-> Loss:0.210,Oa:0.994,Miou:0.978, time:4.3s
+Ep237: tra-> Loss:0.207,Oa:0.994,Miou:0.976, val-> Loss:0.377,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep238: tra-> Loss:0.236,Oa:0.995,Miou:0.984, time:4.9s
+Ep239: tra-> Loss:0.168,Oa:0.996,Miou:0.984, val-> Loss:0.377,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep240: tra-> Loss:0.193,Oa:0.996,Miou:0.982, time:4.3s
+Ep241: tra-> Loss:0.221,Oa:0.995,Miou:0.981, val-> Loss:0.365,Oa:0.990,Miou:0.954,MiouEMA:0.9535, lr:1.00e-04,time:8.7s
+Ep242: tra-> Loss:0.242,Oa:0.996,Miou:0.982, time:4.3s
+Ep243: tra-> Loss:0.210,Oa:0.995,Miou:0.981, val-> Loss:0.385,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:9.4s
+Ep244: tra-> Loss:0.253,Oa:0.994,Miou:0.976, time:4.8s
+Ep245: tra-> Loss:0.270,Oa:0.994,Miou:0.971, val-> Loss:0.377,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.5s
+Ep246: tra-> Loss:0.198,Oa:0.994,Miou:0.981, time:4.6s
+Ep247: tra-> Loss:0.236,Oa:0.995,Miou:0.977, val-> Loss:0.381,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.5s
+Ep248: tra-> Loss:0.192,Oa:0.995,Miou:0.981, time:4.7s
+Ep249: tra-> Loss:0.251,Oa:0.995,Miou:0.976, val-> Loss:0.370,Oa:0.990,Miou:0.954,MiouEMA:0.9536, lr:1.00e-04,time:9.3s
+Ep250: tra-> Loss:0.230,Oa:0.995,Miou:0.981, time:5.0s
+Ep251: tra-> Loss:0.269,Oa:0.994,Miou:0.974, val-> Loss:0.375,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:9.1s
+Ep252: tra-> Loss:0.466,Oa:0.990,Miou:0.965, time:3.8s
+Ep253: tra-> Loss:0.282,Oa:0.994,Miou:0.977, val-> Loss:0.452,Oa:0.990,Miou:0.952,MiouEMA:0.9537, lr:1.00e-04,time:8.7s
+Ep254: tra-> Loss:0.328,Oa:0.994,Miou:0.978, time:4.2s
+Ep255: tra-> Loss:0.283,Oa:0.995,Miou:0.979, val-> Loss:0.426,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.4s
+Ep256: tra-> Loss:0.252,Oa:0.994,Miou:0.977, time:4.5s
+Ep257: tra-> Loss:0.271,Oa:0.994,Miou:0.978, val-> Loss:0.449,Oa:0.990,Miou:0.953,MiouEMA:0.9538, lr:1.00e-04,time:8.1s
+Ep258: tra-> Loss:0.265,Oa:0.994,Miou:0.981, time:3.9s
+Ep259: tra-> Loss:0.270,Oa:0.994,Miou:0.972, val-> Loss:0.483,Oa:0.990,Miou:0.952,MiouEMA:0.9537, lr:1.00e-04,time:9.6s
+Ep260: tra-> Loss:0.273,Oa:0.994,Miou:0.980, time:4.4s
+Ep261: tra-> Loss:0.215,Oa:0.996,Miou:0.982, val-> Loss:0.430,Oa:0.990,Miou:0.952,MiouEMA:0.9537, lr:1.00e-04,time:9.5s
+Ep262: tra-> Loss:0.259,Oa:0.995,Miou:0.978, time:4.2s
+Ep263: tra-> Loss:0.241,Oa:0.995,Miou:0.979, val-> Loss:0.412,Oa:0.990,Miou:0.952,MiouEMA:0.9536, lr:1.00e-04,time:9.1s
+Ep264: tra-> Loss:0.219,Oa:0.995,Miou:0.979, time:4.4s
+Ep265: tra-> Loss:0.404,Oa:0.992,Miou:0.967, val-> Loss:0.414,Oa:0.990,Miou:0.951,MiouEMA:0.9536, lr:1.00e-04,time:9.4s
+Ep266: tra-> Loss:0.283,Oa:0.994,Miou:0.977, time:4.4s
+Ep267: tra-> Loss:0.287,Oa:0.995,Miou:0.977, val-> Loss:0.449,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.2s
+Ep268: tra-> Loss:0.258,Oa:0.994,Miou:0.978, time:3.8s
+Ep269: tra-> Loss:0.240,Oa:0.994,Miou:0.976, val-> Loss:0.399,Oa:0.990,Miou:0.952,MiouEMA:0.9535, lr:1.00e-04,time:8.8s
+Ep270: tra-> Loss:0.223,Oa:0.995,Miou:0.983, time:3.6s
+Ep271: tra-> Loss:0.222,Oa:0.995,Miou:0.980, val-> Loss:0.397,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.2s
+Ep272: tra-> Loss:0.237,Oa:0.995,Miou:0.979, time:4.9s
+Ep273: tra-> Loss:0.282,Oa:0.993,Miou:0.967, val-> Loss:0.396,Oa:0.990,Miou:0.952,MiouEMA:0.9535, lr:1.00e-04,time:8.9s
+Ep274: tra-> Loss:0.240,Oa:0.995,Miou:0.975, time:4.8s
+Ep275: tra-> Loss:0.227,Oa:0.994,Miou:0.983, val-> Loss:0.377,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:9.5s
+Ep276: tra-> Loss:0.205,Oa:0.995,Miou:0.982, time:4.3s
+Ep277: tra-> Loss:0.189,Oa:0.996,Miou:0.980, val-> Loss:0.386,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:7.8s
+Ep278: tra-> Loss:0.193,Oa:0.996,Miou:0.986, time:4.1s
+Ep279: tra-> Loss:0.208,Oa:0.995,Miou:0.982, val-> Loss:0.393,Oa:0.990,Miou:0.952,MiouEMA:0.9533, lr:1.00e-04,time:7.9s
+Ep280: tra-> Loss:0.222,Oa:0.995,Miou:0.984, time:3.7s
+Ep281: tra-> Loss:0.242,Oa:0.995,Miou:0.976, val-> Loss:0.380,Oa:0.990,Miou:0.954,MiouEMA:0.9534, lr:1.00e-04,time:7.8s
+Ep282: tra-> Loss:0.211,Oa:0.995,Miou:0.981, time:4.2s
+Ep283: tra-> Loss:0.239,Oa:0.993,Miou:0.972, val-> Loss:0.386,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.1s
+Ep284: tra-> Loss:0.217,Oa:0.996,Miou:0.984, time:4.0s
+Ep285: tra-> Loss:0.213,Oa:0.993,Miou:0.975, val-> Loss:0.393,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.0s
+Ep286: tra-> Loss:0.199,Oa:0.995,Miou:0.980, time:3.8s
+Ep287: tra-> Loss:0.232,Oa:0.994,Miou:0.977, val-> Loss:0.413,Oa:0.990,Miou:0.950,MiouEMA:0.9533, lr:1.00e-04,time:7.9s
+Ep288: tra-> Loss:0.210,Oa:0.996,Miou:0.982, time:4.8s
+Ep289: tra-> Loss:0.240,Oa:0.994,Miou:0.972, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9533, lr:1.00e-04,time:8.3s
+Ep290: tra-> Loss:0.228,Oa:0.993,Miou:0.975, time:4.2s
+Ep291: tra-> Loss:0.222,Oa:0.995,Miou:0.979, val-> Loss:0.381,Oa:0.990,Miou:0.950,MiouEMA:0.9532, lr:1.00e-04,time:8.4s
+Ep292: tra-> Loss:0.235,Oa:0.992,Miou:0.974, time:4.2s
+Ep293: tra-> Loss:0.225,Oa:0.995,Miou:0.978, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.0s
+Ep294: tra-> Loss:0.221,Oa:0.994,Miou:0.979, time:4.2s
+Ep295: tra-> Loss:0.351,Oa:0.996,Miou:0.980, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.4s
+Ep296: tra-> Loss:0.232,Oa:0.996,Miou:0.978, time:3.6s
+Ep297: tra-> Loss:0.196,Oa:0.996,Miou:0.982, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:8.7s
+Ep298: tra-> Loss:0.244,Oa:0.996,Miou:0.980, time:4.2s
+Ep299: tra-> Loss:0.210,Oa:0.995,Miou:0.982, val-> Loss:0.376,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.1s
+Ep300: tra-> Loss:0.203,Oa:0.995,Miou:0.978, time:3.8s
+Ep301: tra-> Loss:0.255,Oa:0.994,Miou:0.975, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9532, lr:1.00e-04,time:9.5s
+Ep302: tra-> Loss:0.225,Oa:0.995,Miou:0.980, time:4.8s
+Ep303: tra-> Loss:0.223,Oa:0.994,Miou:0.975, val-> Loss:0.379,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:7.9s
+Ep304: tra-> Loss:0.176,Oa:0.996,Miou:0.982, time:4.7s
+Ep305: tra-> Loss:0.210,Oa:0.994,Miou:0.977, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.6s
+Ep306: tra-> Loss:0.267,Oa:0.993,Miou:0.972, time:4.3s
+Ep307: tra-> Loss:0.262,Oa:0.994,Miou:0.976, val-> Loss:0.381,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.3s
+Ep308: tra-> Loss:0.202,Oa:0.995,Miou:0.981, time:5.3s
+Ep309: tra-> Loss:0.195,Oa:0.996,Miou:0.982, val-> Loss:0.384,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.9s
+Ep310: tra-> Loss:0.225,Oa:0.994,Miou:0.976, time:3.8s
+Ep311: tra-> Loss:0.232,Oa:0.995,Miou:0.973, val-> Loss:0.377,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.5s
+Ep312: tra-> Loss:0.203,Oa:0.995,Miou:0.978, time:4.2s
+Ep313: tra-> Loss:0.192,Oa:0.996,Miou:0.984, val-> Loss:0.362,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.1s
+Ep314: tra-> Loss:0.219,Oa:0.995,Miou:0.978, time:4.3s
+Ep315: tra-> Loss:0.241,Oa:0.995,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.3s
+Ep316: tra-> Loss:0.238,Oa:0.994,Miou:0.978, time:3.8s
+Ep317: tra-> Loss:0.238,Oa:0.994,Miou:0.973, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.5s
+Ep318: tra-> Loss:0.203,Oa:0.995,Miou:0.980, time:4.2s
+Ep319: tra-> Loss:0.173,Oa:0.996,Miou:0.982, val-> Loss:0.372,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:7.9s
+Ep320: tra-> Loss:0.203,Oa:0.996,Miou:0.984, time:4.4s
+Ep321: tra-> Loss:0.224,Oa:0.994,Miou:0.980, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9531, lr:1.00e-04,time:8.9s
+Ep322: tra-> Loss:0.219,Oa:0.994,Miou:0.978, time:3.7s
+Ep323: tra-> Loss:0.229,Oa:0.994,Miou:0.978, val-> Loss:0.376,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:9.0s
+Ep324: tra-> Loss:0.213,Oa:0.995,Miou:0.975, time:4.3s
+Ep325: tra-> Loss:0.183,Oa:0.995,Miou:0.981, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9531, lr:1.00e-04,time:8.6s
+Ep326: tra-> Loss:0.210,Oa:0.996,Miou:0.981, time:3.7s
+Ep327: tra-> Loss:0.229,Oa:0.995,Miou:0.981, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.7s
+Ep328: tra-> Loss:0.237,Oa:0.995,Miou:0.977, time:3.9s
+Ep329: tra-> Loss:0.203,Oa:0.995,Miou:0.980, val-> Loss:0.371,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.5s
+Ep330: tra-> Loss:0.233,Oa:0.996,Miou:0.981, time:4.2s
+Ep331: tra-> Loss:0.207,Oa:0.996,Miou:0.982, val-> Loss:0.365,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.5s
+Ep332: tra-> Loss:0.244,Oa:0.996,Miou:0.981, time:3.7s
+Ep333: tra-> Loss:0.205,Oa:0.995,Miou:0.978, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.3s
+Ep334: tra-> Loss:0.240,Oa:0.995,Miou:0.975, time:4.8s
+Ep335: tra-> Loss:0.393,Oa:0.995,Miou:0.980, val-> Loss:0.358,Oa:0.990,Miou:0.953,MiouEMA:0.9532, lr:1.00e-04,time:8.6s
+Ep336: tra-> Loss:0.227,Oa:0.995,Miou:0.982, time:5.1s
+Ep337: tra-> Loss:0.299,Oa:0.994,Miou:0.970, val-> Loss:0.374,Oa:0.989,Miou:0.950,MiouEMA:0.9533, lr:1.00e-04,time:9.1s
+Ep338: tra-> Loss:0.233,Oa:0.994,Miou:0.978, time:3.6s
+Ep339: tra-> Loss:0.257,Oa:0.993,Miou:0.970, val-> Loss:0.381,Oa:0.989,Miou:0.948,MiouEMA:0.9534, lr:1.00e-04,time:8.3s
+Ep340: tra-> Loss:0.211,Oa:0.994,Miou:0.978, time:4.1s
+Ep341: tra-> Loss:0.265,Oa:0.994,Miou:0.978, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.5s
+Ep342: tra-> Loss:0.208,Oa:0.994,Miou:0.976, time:3.8s
+Ep343: tra-> Loss:0.242,Oa:0.995,Miou:0.978, val-> Loss:0.379,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.1s
+Ep344: tra-> Loss:0.205,Oa:0.995,Miou:0.983, time:4.1s
+Ep345: tra-> Loss:0.215,Oa:0.995,Miou:0.977, val-> Loss:0.385,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.3s
+Ep346: tra-> Loss:0.210,Oa:0.995,Miou:0.983, time:3.7s
+Ep347: tra-> Loss:0.222,Oa:0.995,Miou:0.976, val-> Loss:0.379,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.2s
+Ep348: tra-> Loss:0.209,Oa:0.995,Miou:0.980, time:4.7s
+Ep349: tra-> Loss:0.187,Oa:0.995,Miou:0.983, val-> Loss:0.378,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.5s
+Ep350: tra-> Loss:0.238,Oa:0.995,Miou:0.981, time:4.4s
+Ep351: tra-> Loss:0.219,Oa:0.996,Miou:0.984, val-> Loss:0.383,Oa:0.990,Miou:0.951,MiouEMA:0.9533, lr:1.00e-04,time:9.0s
+Ep352: tra-> Loss:0.239,Oa:0.994,Miou:0.975, time:5.2s
+Ep353: tra-> Loss:0.222,Oa:0.995,Miou:0.979, val-> Loss:0.377,Oa:0.990,Miou:0.952,MiouEMA:0.9533, lr:1.00e-04,time:8.7s
+Ep354: tra-> Loss:0.206,Oa:0.996,Miou:0.981, time:3.9s
+Ep355: tra-> Loss:0.220,Oa:0.995,Miou:0.977, val-> Loss:0.364,Oa:0.990,Miou:0.953,MiouEMA:0.9533, lr:1.00e-04,time:8.5s
+Ep356: tra-> Loss:0.275,Oa:0.995,Miou:0.979, time:4.8s
+Ep357: tra-> Loss:0.238,Oa:0.994,Miou:0.976, val-> Loss:0.406,Oa:0.989,Miou:0.947,MiouEMA:0.9533, lr:1.00e-04,time:9.8s
+Ep358: tra-> Loss:0.215,Oa:0.995,Miou:0.982, time:5.0s
+Ep359: tra-> Loss:0.189,Oa:0.996,Miou:0.979, val-> Loss:0.372,Oa:0.990,Miou:0.953,MiouEMA:0.9533, lr:1.00e-04,time:8.6s
+Ep360: tra-> Loss:0.203,Oa:0.995,Miou:0.980, time:4.4s
+Ep361: tra-> Loss:0.204,Oa:0.994,Miou:0.978, val-> Loss:0.370,Oa:0.990,Miou:0.954,MiouEMA:0.9533, lr:1.00e-04,time:8.9s
+Ep362: tra-> Loss:0.205,Oa:0.996,Miou:0.982, time:4.3s
+Ep363: tra-> Loss:0.209,Oa:0.995,Miou:0.982, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9533, lr:1.00e-04,time:9.4s
+Ep364: tra-> Loss:0.206,Oa:0.994,Miou:0.976, time:4.5s
+Ep365: tra-> Loss:0.201,Oa:0.995,Miou:0.978, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep366: tra-> Loss:0.190,Oa:0.995,Miou:0.984, time:4.2s
+Ep367: tra-> Loss:0.223,Oa:0.994,Miou:0.978, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:9.4s
+Ep368: tra-> Loss:0.179,Oa:0.996,Miou:0.985, time:4.8s
+Ep369: tra-> Loss:0.208,Oa:0.994,Miou:0.974, val-> Loss:0.367,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.4s
+Ep370: tra-> Loss:0.211,Oa:0.995,Miou:0.978, time:4.0s
+Ep371: tra-> Loss:0.203,Oa:0.996,Miou:0.984, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:9.1s
+Ep372: tra-> Loss:0.206,Oa:0.996,Miou:0.982, time:4.3s
+Ep373: tra-> Loss:0.204,Oa:0.995,Miou:0.979, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.2s
+Ep374: tra-> Loss:0.209,Oa:0.995,Miou:0.981, time:3.9s
+Ep375: tra-> Loss:0.225,Oa:0.994,Miou:0.976, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep376: tra-> Loss:0.239,Oa:0.996,Miou:0.978, time:4.4s
+Ep377: tra-> Loss:0.224,Oa:0.993,Miou:0.974, val-> Loss:0.385,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep378: tra-> Loss:0.205,Oa:0.996,Miou:0.979, time:4.9s
+Ep379: tra-> Loss:0.251,Oa:0.994,Miou:0.976, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9534, lr:1.00e-04,time:8.8s
+Ep380: tra-> Loss:0.202,Oa:0.995,Miou:0.981, time:4.4s
+Ep381: tra-> Loss:0.221,Oa:0.994,Miou:0.982, val-> Loss:0.384,Oa:0.990,Miou:0.952,MiouEMA:0.9534, lr:1.00e-04,time:8.7s
+Ep382: tra-> Loss:0.190,Oa:0.995,Miou:0.980, time:4.1s
+Ep383: tra-> Loss:0.241,Oa:0.995,Miou:0.978, val-> Loss:0.367,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.7s
+Ep384: tra-> Loss:0.226,Oa:0.995,Miou:0.975, time:4.3s
+Ep385: tra-> Loss:0.210,Oa:0.995,Miou:0.978, val-> Loss:0.365,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.8s
+Ep386: tra-> Loss:0.187,Oa:0.995,Miou:0.982, time:5.0s
+Ep387: tra-> Loss:0.209,Oa:0.996,Miou:0.984, val-> Loss:0.372,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.6s
+Ep388: tra-> Loss:0.218,Oa:0.995,Miou:0.979, time:4.3s
+Ep389: tra-> Loss:0.232,Oa:0.995,Miou:0.982, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.9s
+Ep390: tra-> Loss:0.232,Oa:0.994,Miou:0.977, time:4.4s
+Ep391: tra-> Loss:0.195,Oa:0.995,Miou:0.984, val-> Loss:0.380,Oa:0.990,Miou:0.952,MiouEMA:0.9535, lr:1.00e-04,time:9.8s
+Ep392: tra-> Loss:0.176,Oa:0.995,Miou:0.984, time:4.1s
+Ep393: tra-> Loss:0.215,Oa:0.995,Miou:0.982, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9535, lr:1.00e-04,time:8.7s
+Ep394: tra-> Loss:0.205,Oa:0.994,Miou:0.980, time:3.9s
+Ep395: tra-> Loss:0.188,Oa:0.996,Miou:0.984, val-> Loss:0.373,Oa:0.990,Miou:0.954,MiouEMA:0.9535, lr:1.00e-04,time:8.5s
+Ep396: tra-> Loss:0.203,Oa:0.994,Miou:0.981, time:4.5s
+Ep397: tra-> Loss:0.183,Oa:0.995,Miou:0.981, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:9.5s
+Ep398: tra-> Loss:0.213,Oa:0.995,Miou:0.983, time:4.2s
+Ep399: tra-> Loss:0.243,Oa:0.993,Miou:0.974, val-> Loss:0.375,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.5s
+Ep400: tra-> Loss:0.245,Oa:0.994,Miou:0.975, time:4.8s
+Ep401: tra-> Loss:0.204,Oa:0.996,Miou:0.982, val-> Loss:0.373,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.6s
+Ep402: tra-> Loss:0.171,Oa:0.996,Miou:0.985, time:4.9s
+Ep403: tra-> Loss:0.215,Oa:0.994,Miou:0.980, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9536, lr:1.00e-04,time:8.8s
+Ep404: tra-> Loss:0.210,Oa:0.995,Miou:0.981, time:3.8s
+Ep405: tra-> Loss:0.195,Oa:0.994,Miou:0.980, val-> Loss:0.381,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:9.2s
+Ep406: tra-> Loss:0.234,Oa:0.994,Miou:0.978, time:3.7s
+Ep407: tra-> Loss:0.208,Oa:0.994,Miou:0.977, val-> Loss:0.384,Oa:0.990,Miou:0.952,MiouEMA:0.9536, lr:1.00e-04,time:8.9s
+Ep408: tra-> Loss:0.189,Oa:0.995,Miou:0.983, time:3.7s
+Ep409: tra-> Loss:0.173,Oa:0.996,Miou:0.985, val-> Loss:0.366,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.4s
+Ep410: tra-> Loss:0.203,Oa:0.996,Miou:0.983, time:4.9s
+Ep411: tra-> Loss:0.207,Oa:0.995,Miou:0.978, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9536, lr:1.00e-04,time:9.0s
+Ep412: tra-> Loss:0.207,Oa:0.994,Miou:0.976, time:3.8s
+Ep413: tra-> Loss:0.189,Oa:0.996,Miou:0.984, val-> Loss:0.382,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.7s
+Ep414: tra-> Loss:0.221,Oa:0.995,Miou:0.979, time:4.0s
+Ep415: tra-> Loss:0.215,Oa:0.996,Miou:0.982, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9536, lr:1.00e-04,time:8.4s
+Ep416: tra-> Loss:0.222,Oa:0.995,Miou:0.977, time:4.8s
+Ep417: tra-> Loss:0.214,Oa:0.994,Miou:0.975, val-> Loss:0.374,Oa:0.990,Miou:0.953,MiouEMA:0.9537, lr:1.00e-04,time:8.9s
+Ep418: tra-> Loss:0.227,Oa:0.994,Miou:0.976, time:4.4s
+Ep419: tra-> Loss:0.229,Oa:0.995,Miou:0.981, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:8.5s
+Ep420: tra-> Loss:0.193,Oa:0.996,Miou:0.980, time:4.2s
+Ep421: tra-> Loss:0.246,Oa:0.996,Miou:0.983, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9537, lr:1.00e-04,time:8.5s
+Ep422: tra-> Loss:0.229,Oa:0.994,Miou:0.976, time:4.4s
+Ep423: tra-> Loss:0.228,Oa:0.994,Miou:0.978, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9538, lr:1.00e-04,time:8.8s
+Ep424: tra-> Loss:0.179,Oa:0.996,Miou:0.984, time:4.4s
+Ep425: tra-> Loss:0.230,Oa:0.995,Miou:0.982, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9538, lr:1.00e-04,time:8.4s
+Ep426: tra-> Loss:0.217,Oa:0.994,Miou:0.981, time:3.7s
+Ep427: tra-> Loss:0.183,Oa:0.996,Miou:0.986, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9539, lr:1.00e-04,time:9.0s
+Ep428: tra-> Loss:0.211,Oa:0.995,Miou:0.981, time:4.3s
+Ep429: tra-> Loss:0.215,Oa:0.995,Miou:0.982, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9539, lr:1.00e-04,time:8.5s
+Ep430: tra-> Loss:0.212,Oa:0.994,Miou:0.981, time:3.7s
+Ep431: tra-> Loss:0.198,Oa:0.996,Miou:0.986, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9539, lr:1.00e-04,time:8.3s
+Ep432: tra-> Loss:0.204,Oa:0.995,Miou:0.980, time:4.1s
+Ep433: tra-> Loss:0.215,Oa:0.995,Miou:0.981, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9539, lr:1.00e-04,time:9.6s
+Ep434: tra-> Loss:0.207,Oa:0.995,Miou:0.981, time:4.4s
+Ep435: tra-> Loss:0.233,Oa:0.995,Miou:0.978, val-> Loss:0.360,Oa:0.990,Miou:0.953,MiouEMA:0.9540, lr:1.00e-04,time:8.8s
+Ep436: tra-> Loss:0.204,Oa:0.995,Miou:0.981, time:3.7s
+Ep437: tra-> Loss:0.231,Oa:0.994,Miou:0.975, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9540, lr:1.00e-04,time:8.0s
+Ep438: tra-> Loss:0.214,Oa:0.994,Miou:0.978, time:4.9s
+Ep439: tra-> Loss:0.182,Oa:0.996,Miou:0.986, val-> Loss:0.361,Oa:0.990,Miou:0.953,MiouEMA:0.9541, lr:1.00e-04,time:9.1s
+Ep440: tra-> Loss:0.189,Oa:0.995,Miou:0.981, time:4.5s
+Ep441: tra-> Loss:0.196,Oa:0.995,Miou:0.982, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9541, lr:1.00e-04,time:8.2s
+Ep442: tra-> Loss:0.191,Oa:0.996,Miou:0.983, time:4.8s
+Ep443: tra-> Loss:0.202,Oa:0.995,Miou:0.983, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9541, lr:1.00e-04,time:8.7s
+Ep444: tra-> Loss:0.192,Oa:0.994,Miou:0.980, time:4.5s
+Ep445: tra-> Loss:0.235,Oa:0.995,Miou:0.979, val-> Loss:0.351,Oa:0.990,Miou:0.954,MiouEMA:0.9542, lr:1.00e-04,time:8.4s
+Ep446: tra-> Loss:0.253,Oa:0.994,Miou:0.973, time:3.7s
+Ep447: tra-> Loss:0.211,Oa:0.995,Miou:0.979, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9542, lr:1.00e-04,time:8.7s
+Ep448: tra-> Loss:0.206,Oa:0.996,Miou:0.980, time:4.4s
+Ep449: tra-> Loss:0.217,Oa:0.995,Miou:0.980, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9543, lr:1.00e-04,time:8.6s
+Ep450: tra-> Loss:0.209,Oa:0.996,Miou:0.983, time:3.7s
+Ep451: tra-> Loss:0.209,Oa:0.995,Miou:0.980, val-> Loss:0.354,Oa:0.990,Miou:0.954,MiouEMA:0.9543, lr:1.00e-04,time:8.7s
+Ep452: tra-> Loss:0.187,Oa:0.997,Miou:0.988, time:4.2s
+Ep453: tra-> Loss:0.207,Oa:0.995,Miou:0.978, val-> Loss:0.357,Oa:0.990,Miou:0.954,MiouEMA:0.9543, lr:1.00e-04,time:9.3s
+Ep454: tra-> Loss:0.225,Oa:0.994,Miou:0.977, time:4.0s
+Ep455: tra-> Loss:0.212,Oa:0.996,Miou:0.983, val-> Loss:0.354,Oa:0.990,Miou:0.954,MiouEMA:0.9544, lr:1.00e-04,time:8.4s
+Ep456: tra-> Loss:0.213,Oa:0.995,Miou:0.978, time:4.2s
+Ep457: tra-> Loss:0.199,Oa:0.994,Miou:0.978, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9544, lr:1.00e-04,time:8.8s
+Ep458: tra-> Loss:0.208,Oa:0.995,Miou:0.981, time:4.2s
+Ep459: tra-> Loss:0.200,Oa:0.995,Miou:0.981, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9544, lr:1.00e-04,time:9.0s
+Ep460: tra-> Loss:0.268,Oa:0.994,Miou:0.979, time:4.0s
+Ep461: tra-> Loss:0.185,Oa:0.995,Miou:0.979, val-> Loss:0.374,Oa:0.990,Miou:0.950,MiouEMA:0.9544, lr:1.00e-04,time:8.4s
+Ep462: tra-> Loss:0.233,Oa:0.993,Miou:0.972, time:3.9s
+Ep463: tra-> Loss:0.248,Oa:0.995,Miou:0.976, val-> Loss:0.349,Oa:0.990,Miou:0.954,MiouEMA:0.9544, lr:1.00e-04,time:8.8s
+Ep464: tra-> Loss:0.209,Oa:0.995,Miou:0.981, time:4.2s
+Ep465: tra-> Loss:0.213,Oa:0.996,Miou:0.982, val-> Loss:0.345,Oa:0.990,Miou:0.954,MiouEMA:0.9544, lr:1.00e-04,time:8.9s
+Ep466: tra-> Loss:0.218,Oa:0.996,Miou:0.983, time:4.4s
+Ep467: tra-> Loss:0.234,Oa:0.995,Miou:0.977, val-> Loss:0.352,Oa:0.990,Miou:0.953,MiouEMA:0.9544, lr:1.00e-04,time:8.1s
+Ep468: tra-> Loss:0.194,Oa:0.995,Miou:0.982, time:4.3s
+Ep469: tra-> Loss:0.218,Oa:0.994,Miou:0.978, val-> Loss:0.357,Oa:0.990,Miou:0.953,MiouEMA:0.9545, lr:1.00e-04,time:9.6s
+Ep470: tra-> Loss:0.220,Oa:0.994,Miou:0.978, time:4.0s
+Ep471: tra-> Loss:0.202,Oa:0.995,Miou:0.979, val-> Loss:0.354,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9545
+Ep472: tra-> Loss:0.218,Oa:0.993,Miou:0.977, time:3.9s
+Ep473: tra-> Loss:0.194,Oa:0.996,Miou:0.982, val-> Loss:0.349,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9545
+Ep474: tra-> Loss:0.206,Oa:0.996,Miou:0.982, time:3.8s
+Ep475: tra-> Loss:0.236,Oa:0.995,Miou:0.976, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.8s
+  >> saved EMA ckpt, val miou 0.9545
+Ep476: tra-> Loss:0.197,Oa:0.995,Miou:0.982, time:5.0s
+Ep477: tra-> Loss:0.212,Oa:0.995,Miou:0.978, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:10.0s
+  >> saved EMA ckpt, val miou 0.9545
+Ep478: tra-> Loss:0.227,Oa:0.995,Miou:0.975, time:4.2s
+Ep479: tra-> Loss:0.211,Oa:0.995,Miou:0.980, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.9s
+  >> saved EMA ckpt, val miou 0.9545
+Ep480: tra-> Loss:0.228,Oa:0.995,Miou:0.979, time:4.5s
+Ep481: tra-> Loss:0.203,Oa:0.995,Miou:0.981, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.3s
+Ep482: tra-> Loss:0.198,Oa:0.996,Miou:0.981, time:4.5s
+Ep483: tra-> Loss:0.193,Oa:0.996,Miou:0.982, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.7s
+Ep484: tra-> Loss:0.194,Oa:0.994,Miou:0.981, time:3.8s
+Ep485: tra-> Loss:0.230,Oa:0.996,Miou:0.983, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9545
+Ep486: tra-> Loss:0.204,Oa:0.995,Miou:0.982, time:4.5s
+Ep487: tra-> Loss:0.224,Oa:0.994,Miou:0.974, val-> Loss:0.357,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9546
+Ep488: tra-> Loss:0.218,Oa:0.995,Miou:0.982, time:3.9s
+Ep489: tra-> Loss:0.239,Oa:0.993,Miou:0.974, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.5s
+  >> saved EMA ckpt, val miou 0.9546
+Ep490: tra-> Loss:0.188,Oa:0.994,Miou:0.980, time:4.0s
+Ep491: tra-> Loss:0.216,Oa:0.995,Miou:0.980, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.4s
+  >> saved EMA ckpt, val miou 0.9546
+Ep492: tra-> Loss:0.213,Oa:0.995,Miou:0.979, time:4.3s
+Ep493: tra-> Loss:0.201,Oa:0.995,Miou:0.975, val-> Loss:0.361,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.5s
+Ep494: tra-> Loss:0.200,Oa:0.995,Miou:0.975, time:4.2s
+Ep495: tra-> Loss:0.246,Oa:0.994,Miou:0.975, val-> Loss:0.364,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep496: tra-> Loss:0.179,Oa:0.994,Miou:0.980, time:4.4s
+Ep497: tra-> Loss:0.195,Oa:0.996,Miou:0.984, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep498: tra-> Loss:0.203,Oa:0.994,Miou:0.979, time:4.9s
+Ep499: tra-> Loss:0.233,Oa:0.995,Miou:0.977, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.3s
+Ep500: tra-> Loss:0.186,Oa:0.994,Miou:0.981, time:4.8s
+Ep501: tra-> Loss:0.223,Oa:0.994,Miou:0.981, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.5s
+Ep502: tra-> Loss:0.212,Oa:0.995,Miou:0.980, time:4.2s
+Ep503: tra-> Loss:0.198,Oa:0.995,Miou:0.981, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.9s
+Ep504: tra-> Loss:0.208,Oa:0.996,Miou:0.982, time:3.6s
+Ep505: tra-> Loss:0.192,Oa:0.995,Miou:0.982, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep506: tra-> Loss:0.210,Oa:0.995,Miou:0.981, time:4.9s
+Ep507: tra-> Loss:0.229,Oa:0.995,Miou:0.977, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep508: tra-> Loss:0.188,Oa:0.996,Miou:0.982, time:4.0s
+Ep509: tra-> Loss:0.214,Oa:0.996,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep510: tra-> Loss:0.216,Oa:0.996,Miou:0.986, time:3.7s
+Ep511: tra-> Loss:0.204,Oa:0.995,Miou:0.982, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9546
+Ep512: tra-> Loss:0.198,Oa:0.994,Miou:0.978, time:4.0s
+Ep513: tra-> Loss:0.184,Oa:0.994,Miou:0.979, val-> Loss:0.368,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9546
+Ep514: tra-> Loss:0.205,Oa:0.994,Miou:0.978, time:4.3s
+Ep515: tra-> Loss:0.210,Oa:0.996,Miou:0.983, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.1s
+  >> saved EMA ckpt, val miou 0.9546
+Ep516: tra-> Loss:0.216,Oa:0.995,Miou:0.977, time:4.2s
+Ep517: tra-> Loss:0.214,Oa:0.995,Miou:0.979, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.5s
+  >> saved EMA ckpt, val miou 0.9546
+Ep518: tra-> Loss:0.221,Oa:0.995,Miou:0.980, time:4.3s
+Ep519: tra-> Loss:0.226,Oa:0.994,Miou:0.981, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9546
+Ep520: tra-> Loss:0.192,Oa:0.996,Miou:0.982, time:4.4s
+Ep521: tra-> Loss:0.209,Oa:0.995,Miou:0.982, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9546
+Ep522: tra-> Loss:0.204,Oa:0.994,Miou:0.980, time:4.4s
+Ep523: tra-> Loss:0.205,Oa:0.995,Miou:0.982, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.6s
+Ep524: tra-> Loss:0.184,Oa:0.996,Miou:0.983, time:4.8s
+Ep525: tra-> Loss:0.197,Oa:0.995,Miou:0.984, val-> Loss:0.366,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep526: tra-> Loss:0.206,Oa:0.995,Miou:0.979, time:4.5s
+Ep527: tra-> Loss:0.238,Oa:0.994,Miou:0.977, val-> Loss:0.352,Oa:0.991,Miou:0.955,MiouEMA:0.9546, lr:1.00e-04,time:9.0s
+Ep528: tra-> Loss:0.213,Oa:0.994,Miou:0.981, time:3.9s
+Ep529: tra-> Loss:0.193,Oa:0.995,Miou:0.981, val-> Loss:0.358,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:9.1s
+  >> saved EMA ckpt, val miou 0.9546
+Ep530: tra-> Loss:0.252,Oa:0.994,Miou:0.977, time:3.7s
+Ep531: tra-> Loss:0.211,Oa:0.996,Miou:0.981, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.8s
+  >> saved EMA ckpt, val miou 0.9546
+Ep532: tra-> Loss:0.210,Oa:0.996,Miou:0.981, time:4.5s
+Ep533: tra-> Loss:0.228,Oa:0.994,Miou:0.975, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.6s
+Ep534: tra-> Loss:0.208,Oa:0.996,Miou:0.981, time:4.5s
+Ep535: tra-> Loss:0.220,Oa:0.995,Miou:0.982, val-> Loss:0.361,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:9.4s
+Ep536: tra-> Loss:0.202,Oa:0.995,Miou:0.982, time:4.2s
+Ep537: tra-> Loss:0.273,Oa:0.995,Miou:0.982, val-> Loss:0.383,Oa:0.990,Miou:0.951,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep538: tra-> Loss:0.223,Oa:0.994,Miou:0.972, time:3.8s
+Ep539: tra-> Loss:0.226,Oa:0.993,Miou:0.979, val-> Loss:0.402,Oa:0.989,Miou:0.947,MiouEMA:0.9546, lr:1.00e-04,time:8.8s
+Ep540: tra-> Loss:0.277,Oa:0.993,Miou:0.974, time:4.4s
+Ep541: tra-> Loss:0.243,Oa:0.993,Miou:0.974, val-> Loss:0.365,Oa:0.990,Miou:0.953,MiouEMA:0.9545, lr:1.00e-04,time:8.4s
+Ep542: tra-> Loss:0.240,Oa:0.996,Miou:0.981, time:4.9s
+Ep543: tra-> Loss:0.187,Oa:0.994,Miou:0.980, val-> Loss:0.367,Oa:0.990,Miou:0.953,MiouEMA:0.9545, lr:1.00e-04,time:8.1s
+Ep544: tra-> Loss:0.207,Oa:0.995,Miou:0.982, time:3.8s
+Ep545: tra-> Loss:0.208,Oa:0.997,Miou:0.984, val-> Loss:0.354,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.2s
+Ep546: tra-> Loss:0.219,Oa:0.994,Miou:0.972, time:3.8s
+Ep547: tra-> Loss:0.215,Oa:0.996,Miou:0.977, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep548: tra-> Loss:0.255,Oa:0.995,Miou:0.983, time:4.3s
+Ep549: tra-> Loss:0.232,Oa:0.994,Miou:0.978, val-> Loss:0.357,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.3s
+Ep550: tra-> Loss:0.218,Oa:0.995,Miou:0.981, time:4.9s
+Ep551: tra-> Loss:0.206,Oa:0.994,Miou:0.978, val-> Loss:0.382,Oa:0.990,Miou:0.951,MiouEMA:0.9546, lr:1.00e-04,time:8.4s
+Ep552: tra-> Loss:0.229,Oa:0.994,Miou:0.980, time:4.2s
+Ep553: tra-> Loss:0.211,Oa:0.995,Miou:0.977, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep554: tra-> Loss:0.198,Oa:0.995,Miou:0.983, time:4.3s
+Ep555: tra-> Loss:0.205,Oa:0.996,Miou:0.981, val-> Loss:0.357,Oa:0.991,Miou:0.955,MiouEMA:0.9547, lr:1.00e-04,time:8.6s
+  >> saved EMA ckpt, val miou 0.9547
+Ep556: tra-> Loss:0.212,Oa:0.996,Miou:0.980, time:4.5s
+Ep557: tra-> Loss:0.224,Oa:0.996,Miou:0.983, val-> Loss:0.353,Oa:0.991,Miou:0.955,MiouEMA:0.9547, lr:1.00e-04,time:8.9s
+  >> saved EMA ckpt, val miou 0.9547
+Ep558: tra-> Loss:0.196,Oa:0.995,Miou:0.984, time:4.0s
+Ep559: tra-> Loss:0.243,Oa:0.995,Miou:0.977, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9547
+Ep560: tra-> Loss:0.224,Oa:0.994,Miou:0.974, time:4.1s
+Ep561: tra-> Loss:0.219,Oa:0.994,Miou:0.974, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:9.0s
+  >> saved EMA ckpt, val miou 0.9547
+Ep562: tra-> Loss:0.243,Oa:0.994,Miou:0.980, time:5.0s
+Ep563: tra-> Loss:0.223,Oa:0.994,Miou:0.980, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:9.8s
+  >> saved EMA ckpt, val miou 0.9547
+Ep564: tra-> Loss:0.227,Oa:0.996,Miou:0.981, time:4.3s
+Ep565: tra-> Loss:0.194,Oa:0.996,Miou:0.984, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.4s
+  >> saved EMA ckpt, val miou 0.9547
+Ep566: tra-> Loss:0.220,Oa:0.995,Miou:0.978, time:3.8s
+Ep567: tra-> Loss:0.232,Oa:0.994,Miou:0.977, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.0s
+  >> saved EMA ckpt, val miou 0.9547
+Ep568: tra-> Loss:0.170,Oa:0.995,Miou:0.982, time:4.8s
+Ep569: tra-> Loss:0.238,Oa:0.995,Miou:0.981, val-> Loss:0.371,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.7s
+Ep570: tra-> Loss:0.251,Oa:0.994,Miou:0.974, time:4.5s
+Ep571: tra-> Loss:0.219,Oa:0.995,Miou:0.980, val-> Loss:0.384,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.8s
+Ep572: tra-> Loss:0.242,Oa:0.995,Miou:0.979, time:4.1s
+Ep573: tra-> Loss:0.199,Oa:0.996,Miou:0.983, val-> Loss:0.371,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.6s
+Ep574: tra-> Loss:0.251,Oa:0.996,Miou:0.973, time:4.4s
+Ep575: tra-> Loss:0.206,Oa:0.994,Miou:0.980, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.3s
+Ep576: tra-> Loss:0.202,Oa:0.995,Miou:0.982, time:4.2s
+Ep577: tra-> Loss:0.239,Oa:0.995,Miou:0.975, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:7.9s
+Ep578: tra-> Loss:0.225,Oa:0.994,Miou:0.980, time:3.8s
+Ep579: tra-> Loss:0.206,Oa:0.995,Miou:0.980, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9548
+Ep580: tra-> Loss:0.201,Oa:0.995,Miou:0.985, time:3.6s
+Ep581: tra-> Loss:0.191,Oa:0.996,Miou:0.984, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.6s
+Ep582: tra-> Loss:0.244,Oa:0.994,Miou:0.978, time:4.5s
+Ep583: tra-> Loss:0.200,Oa:0.995,Miou:0.984, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.7s
+Ep584: tra-> Loss:0.227,Oa:0.995,Miou:0.980, time:4.4s
+Ep585: tra-> Loss:0.209,Oa:0.994,Miou:0.974, val-> Loss:0.359,Oa:0.991,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.9s
+  >> saved EMA ckpt, val miou 0.9548
+Ep586: tra-> Loss:0.206,Oa:0.994,Miou:0.982, time:3.9s
+Ep587: tra-> Loss:0.207,Oa:0.996,Miou:0.983, val-> Loss:0.349,Oa:0.991,Miou:0.955,MiouEMA:0.9548, lr:1.00e-04,time:8.9s
+  >> saved RAW ckpt, val miou 0.9549
+Ep588: tra-> Loss:0.214,Oa:0.995,Miou:0.981, time:4.3s
+Ep589: tra-> Loss:0.189,Oa:0.996,Miou:0.982, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.7s
+Ep590: tra-> Loss:0.229,Oa:0.996,Miou:0.982, time:4.3s
+Ep591: tra-> Loss:0.266,Oa:0.994,Miou:0.972, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.4s
+Ep592: tra-> Loss:0.238,Oa:0.995,Miou:0.981, time:4.8s
+Ep593: tra-> Loss:0.238,Oa:0.994,Miou:0.978, val-> Loss:0.351,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.4s
+Ep594: tra-> Loss:0.189,Oa:0.995,Miou:0.978, time:4.0s
+Ep595: tra-> Loss:0.229,Oa:0.995,Miou:0.980, val-> Loss:0.352,Oa:0.991,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:9.2s
+Ep596: tra-> Loss:0.214,Oa:0.996,Miou:0.982, time:4.5s
+Ep597: tra-> Loss:0.181,Oa:0.996,Miou:0.984, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.8s
+Ep598: tra-> Loss:0.260,Oa:0.995,Miou:0.974, time:3.9s
+Ep599: tra-> Loss:0.197,Oa:0.995,Miou:0.980, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:9.1s
+Ep600: tra-> Loss:0.193,Oa:0.996,Miou:0.983, time:4.3s
+Ep601: tra-> Loss:0.213,Oa:0.996,Miou:0.983, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.1s
+Ep602: tra-> Loss:0.217,Oa:0.994,Miou:0.979, time:4.3s
+Ep603: tra-> Loss:0.227,Oa:0.995,Miou:0.979, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.7s
+Ep604: tra-> Loss:0.225,Oa:0.994,Miou:0.979, time:4.8s
+Ep605: tra-> Loss:0.191,Oa:0.995,Miou:0.984, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.9s
+Ep606: tra-> Loss:0.221,Oa:0.995,Miou:0.980, time:5.5s
+Ep607: tra-> Loss:0.205,Oa:0.995,Miou:0.980, val-> Loss:0.361,Oa:0.990,Miou:0.953,MiouEMA:0.9548, lr:1.00e-04,time:9.5s
+Ep608: tra-> Loss:0.210,Oa:0.996,Miou:0.983, time:4.4s
+Ep609: tra-> Loss:0.225,Oa:0.995,Miou:0.977, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.3s
+Ep610: tra-> Loss:0.200,Oa:0.996,Miou:0.983, time:4.4s
+Ep611: tra-> Loss:0.226,Oa:0.996,Miou:0.983, val-> Loss:0.355,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.3s
+Ep612: tra-> Loss:0.196,Oa:0.995,Miou:0.981, time:3.8s
+Ep613: tra-> Loss:0.208,Oa:0.995,Miou:0.982, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.8s
+Ep614: tra-> Loss:0.208,Oa:0.993,Miou:0.974, time:4.4s
+Ep615: tra-> Loss:0.224,Oa:0.996,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.2s
+Ep616: tra-> Loss:0.209,Oa:0.995,Miou:0.982, time:4.9s
+Ep617: tra-> Loss:0.231,Oa:0.994,Miou:0.979, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.8s
+Ep618: tra-> Loss:0.192,Oa:0.994,Miou:0.979, time:4.9s
+Ep619: tra-> Loss:0.203,Oa:0.995,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.953,MiouEMA:0.9548, lr:1.00e-04,time:9.0s
+Ep620: tra-> Loss:0.227,Oa:0.994,Miou:0.979, time:4.4s
+Ep621: tra-> Loss:0.205,Oa:0.995,Miou:0.981, val-> Loss:0.366,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.4s
+Ep622: tra-> Loss:0.215,Oa:0.996,Miou:0.982, time:4.1s
+Ep623: tra-> Loss:0.223,Oa:0.995,Miou:0.979, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.7s
+Ep624: tra-> Loss:0.220,Oa:0.996,Miou:0.979, time:4.4s
+Ep625: tra-> Loss:0.198,Oa:0.995,Miou:0.982, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.5s
+Ep626: tra-> Loss:0.210,Oa:0.994,Miou:0.981, time:3.7s
+Ep627: tra-> Loss:0.212,Oa:0.995,Miou:0.978, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.9s
+Ep628: tra-> Loss:0.219,Oa:0.996,Miou:0.983, time:4.2s
+Ep629: tra-> Loss:0.220,Oa:0.996,Miou:0.981, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:9.0s
+Ep630: tra-> Loss:0.248,Oa:0.994,Miou:0.972, time:4.4s
+Ep631: tra-> Loss:0.170,Oa:0.996,Miou:0.983, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:9.2s
+Ep632: tra-> Loss:0.198,Oa:0.995,Miou:0.982, time:4.9s
+Ep633: tra-> Loss:0.197,Oa:0.996,Miou:0.984, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.4s
+Ep634: tra-> Loss:0.234,Oa:0.995,Miou:0.974, time:4.1s
+Ep635: tra-> Loss:0.194,Oa:0.996,Miou:0.985, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.8s
+Ep636: tra-> Loss:0.218,Oa:0.995,Miou:0.977, time:3.7s
+Ep637: tra-> Loss:0.214,Oa:0.995,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep638: tra-> Loss:0.209,Oa:0.995,Miou:0.979, time:4.1s
+Ep639: tra-> Loss:0.226,Oa:0.995,Miou:0.981, val-> Loss:0.365,Oa:0.990,Miou:0.952,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep640: tra-> Loss:0.202,Oa:0.995,Miou:0.979, time:4.2s
+Ep641: tra-> Loss:0.216,Oa:0.995,Miou:0.982, val-> Loss:0.369,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.8s
+Ep642: tra-> Loss:0.196,Oa:0.996,Miou:0.985, time:4.2s
+Ep643: tra-> Loss:0.202,Oa:0.996,Miou:0.982, val-> Loss:0.365,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.1s
+Ep644: tra-> Loss:0.194,Oa:0.995,Miou:0.981, time:4.9s
+Ep645: tra-> Loss:0.221,Oa:0.996,Miou:0.982, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep646: tra-> Loss:0.185,Oa:0.995,Miou:0.980, time:4.2s
+Ep647: tra-> Loss:0.214,Oa:0.995,Miou:0.975, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.0s
+Ep648: tra-> Loss:0.192,Oa:0.996,Miou:0.984, time:3.8s
+Ep649: tra-> Loss:0.241,Oa:0.994,Miou:0.973, val-> Loss:0.371,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.1s
+Ep650: tra-> Loss:0.200,Oa:0.997,Miou:0.986, time:3.9s
+Ep651: tra-> Loss:0.217,Oa:0.994,Miou:0.979, val-> Loss:0.370,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.7s
+Ep652: tra-> Loss:0.196,Oa:0.996,Miou:0.981, time:4.4s
+Ep653: tra-> Loss:0.192,Oa:0.995,Miou:0.981, val-> Loss:0.367,Oa:0.990,Miou:0.953,MiouEMA:0.9545, lr:1.00e-04,time:8.8s
+Ep654: tra-> Loss:0.213,Oa:0.996,Miou:0.979, time:4.2s
+Ep655: tra-> Loss:0.216,Oa:0.996,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.953,MiouEMA:0.9545, lr:1.00e-04,time:9.3s
+Ep656: tra-> Loss:0.225,Oa:0.995,Miou:0.979, time:4.1s
+Ep657: tra-> Loss:0.199,Oa:0.994,Miou:0.980, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.2s
+Ep658: tra-> Loss:0.190,Oa:0.995,Miou:0.984, time:4.9s
+Ep659: tra-> Loss:0.192,Oa:0.995,Miou:0.983, val-> Loss:0.368,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:8.5s
+Ep660: tra-> Loss:0.202,Oa:0.994,Miou:0.978, time:4.2s
+Ep661: tra-> Loss:0.201,Oa:0.994,Miou:0.978, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9545, lr:1.00e-04,time:9.3s
+Ep662: tra-> Loss:0.176,Oa:0.996,Miou:0.986, time:3.7s
+Ep663: tra-> Loss:0.198,Oa:0.995,Miou:0.981, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep664: tra-> Loss:0.186,Oa:0.995,Miou:0.982, time:4.0s
+Ep665: tra-> Loss:0.188,Oa:0.995,Miou:0.981, val-> Loss:0.352,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.2s
+Ep666: tra-> Loss:0.210,Oa:0.995,Miou:0.980, time:4.3s
+Ep667: tra-> Loss:0.217,Oa:0.995,Miou:0.980, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep668: tra-> Loss:0.204,Oa:0.994,Miou:0.980, time:4.4s
+Ep669: tra-> Loss:0.209,Oa:0.995,Miou:0.977, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep670: tra-> Loss:0.209,Oa:0.995,Miou:0.981, time:4.3s
+Ep671: tra-> Loss:0.238,Oa:0.994,Miou:0.974, val-> Loss:0.371,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep672: tra-> Loss:0.192,Oa:0.995,Miou:0.978, time:4.8s
+Ep673: tra-> Loss:0.211,Oa:0.994,Miou:0.980, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.2s
+Ep674: tra-> Loss:0.203,Oa:0.994,Miou:0.981, time:4.4s
+Ep675: tra-> Loss:0.176,Oa:0.996,Miou:0.986, val-> Loss:0.362,Oa:0.991,Miou:0.955,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep676: tra-> Loss:0.199,Oa:0.994,Miou:0.981, time:4.8s
+Ep677: tra-> Loss:0.185,Oa:0.996,Miou:0.984, val-> Loss:0.360,Oa:0.991,Miou:0.955,MiouEMA:0.9546, lr:1.00e-04,time:8.6s
+  >> saved RAW ckpt, val miou 0.9549
+Ep678: tra-> Loss:0.218,Oa:0.995,Miou:0.980, time:4.1s
+Ep679: tra-> Loss:0.220,Oa:0.995,Miou:0.977, val-> Loss:0.366,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.8s
+Ep680: tra-> Loss:0.202,Oa:0.995,Miou:0.983, time:4.3s
+Ep681: tra-> Loss:0.211,Oa:0.994,Miou:0.976, val-> Loss:0.373,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.1s
+Ep682: tra-> Loss:0.230,Oa:0.995,Miou:0.978, time:3.8s
+Ep683: tra-> Loss:0.217,Oa:0.995,Miou:0.979, val-> Loss:0.365,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:9.5s
+Ep684: tra-> Loss:0.214,Oa:0.995,Miou:0.978, time:4.9s
+Ep685: tra-> Loss:0.208,Oa:0.995,Miou:0.975, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.1s
+Ep686: tra-> Loss:0.203,Oa:0.993,Miou:0.974, time:3.8s
+Ep687: tra-> Loss:0.189,Oa:0.996,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.3s
+Ep688: tra-> Loss:0.202,Oa:0.996,Miou:0.984, time:3.9s
+Ep689: tra-> Loss:0.218,Oa:0.994,Miou:0.979, val-> Loss:0.365,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep690: tra-> Loss:0.229,Oa:0.994,Miou:0.978, time:3.7s
+Ep691: tra-> Loss:0.212,Oa:0.995,Miou:0.979, val-> Loss:0.370,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.7s
+Ep692: tra-> Loss:0.238,Oa:0.995,Miou:0.978, time:4.2s
+Ep693: tra-> Loss:0.244,Oa:0.996,Miou:0.975, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.5s
+Ep694: tra-> Loss:0.201,Oa:0.996,Miou:0.982, time:4.8s
+Ep695: tra-> Loss:0.201,Oa:0.995,Miou:0.980, val-> Loss:0.361,Oa:0.990,Miou:0.953,MiouEMA:0.9547, lr:1.00e-04,time:8.5s
+Ep696: tra-> Loss:0.205,Oa:0.996,Miou:0.980, time:4.4s
+Ep697: tra-> Loss:0.190,Oa:0.995,Miou:0.981, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9546, lr:1.00e-04,time:8.3s
+Ep698: tra-> Loss:0.254,Oa:0.995,Miou:0.976, time:4.9s
+Ep699: tra-> Loss:0.209,Oa:0.995,Miou:0.978, val-> Loss:0.365,Oa:0.990,Miou:0.951,MiouEMA:0.9547, lr:1.00e-04,time:8.2s
+Ep700: tra-> Loss:0.210,Oa:0.995,Miou:0.983, time:4.9s
+Ep701: tra-> Loss:0.289,Oa:0.994,Miou:0.977, val-> Loss:0.358,Oa:0.990,Miou:0.952,MiouEMA:0.9547, lr:1.00e-04,time:8.8s
+Ep702: tra-> Loss:0.203,Oa:0.995,Miou:0.982, time:4.3s
+Ep703: tra-> Loss:0.207,Oa:0.994,Miou:0.976, val-> Loss:0.383,Oa:0.990,Miou:0.950,MiouEMA:0.9547, lr:1.00e-04,time:8.6s
+Ep704: tra-> Loss:0.222,Oa:0.994,Miou:0.975, time:3.7s
+Ep705: tra-> Loss:0.234,Oa:0.995,Miou:0.976, val-> Loss:0.358,Oa:0.990,Miou:0.953,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep706: tra-> Loss:0.274,Oa:0.997,Miou:0.986, time:4.3s
+Ep707: tra-> Loss:0.216,Oa:0.995,Miou:0.978, val-> Loss:0.433,Oa:0.988,Miou:0.940,MiouEMA:0.9546, lr:1.00e-04,time:8.9s
+Ep708: tra-> Loss:0.261,Oa:0.994,Miou:0.975, time:4.2s
+Ep709: tra-> Loss:0.217,Oa:0.995,Miou:0.979, val-> Loss:0.377,Oa:0.989,Miou:0.950,MiouEMA:0.9547, lr:1.00e-04,time:8.9s
+Ep710: tra-> Loss:0.225,Oa:0.995,Miou:0.980, time:4.1s
+Ep711: tra-> Loss:0.206,Oa:0.995,Miou:0.982, val-> Loss:0.382,Oa:0.990,Miou:0.952,MiouEMA:0.9547, lr:1.00e-04,time:8.3s
+Ep712: tra-> Loss:0.230,Oa:0.995,Miou:0.980, time:5.0s
+Ep713: tra-> Loss:0.195,Oa:0.995,Miou:0.982, val-> Loss:0.353,Oa:0.990,Miou:0.954,MiouEMA:0.9547, lr:1.00e-04,time:8.2s
+Ep714: tra-> Loss:0.196,Oa:0.995,Miou:0.981, time:3.7s
+Ep715: tra-> Loss:0.218,Oa:0.995,Miou:0.978, val-> Loss:0.357,Oa:0.991,Miou:0.955,MiouEMA:0.9548, lr:1.00e-04,time:8.4s
+Ep716: tra-> Loss:0.201,Oa:0.995,Miou:0.978, time:3.8s
+Ep717: tra-> Loss:0.221,Oa:0.995,Miou:0.979, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.7s
+Ep718: tra-> Loss:0.215,Oa:0.994,Miou:0.978, time:3.9s
+Ep719: tra-> Loss:0.218,Oa:0.995,Miou:0.980, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.3s
+Ep720: tra-> Loss:0.211,Oa:0.995,Miou:0.980, time:4.1s
+Ep721: tra-> Loss:0.175,Oa:0.996,Miou:0.984, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9548, lr:1.00e-04,time:8.7s
+Ep722: tra-> Loss:0.167,Oa:0.996,Miou:0.986, time:4.8s
+Ep723: tra-> Loss:0.209,Oa:0.995,Miou:0.979, val-> Loss:0.356,Oa:0.991,Miou:0.955,MiouEMA:0.9548, lr:1.00e-04,time:9.0s
+Ep724: tra-> Loss:0.220,Oa:0.994,Miou:0.977, time:4.2s
+Ep725: tra-> Loss:0.198,Oa:0.994,Miou:0.976, val-> Loss:0.357,Oa:0.991,Miou:0.955,MiouEMA:0.9549, lr:1.00e-04,time:8.1s
+Ep726: tra-> Loss:0.229,Oa:0.995,Miou:0.974, time:3.9s
+Ep727: tra-> Loss:0.270,Oa:0.995,Miou:0.981, val-> Loss:0.356,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:9.0s
+Ep728: tra-> Loss:0.227,Oa:0.995,Miou:0.981, time:4.5s
+Ep729: tra-> Loss:0.209,Oa:0.995,Miou:0.974, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9549
+Ep730: tra-> Loss:0.203,Oa:0.995,Miou:0.983, time:3.6s
+Ep731: tra-> Loss:0.198,Oa:0.996,Miou:0.983, val-> Loss:0.366,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.4s
+  >> saved EMA ckpt, val miou 0.9549
+Ep732: tra-> Loss:0.188,Oa:0.994,Miou:0.979, time:4.5s
+Ep733: tra-> Loss:0.204,Oa:0.995,Miou:0.982, val-> Loss:0.372,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9549
+Ep734: tra-> Loss:0.223,Oa:0.996,Miou:0.980, time:4.3s
+Ep735: tra-> Loss:0.193,Oa:0.996,Miou:0.981, val-> Loss:0.370,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.2s
+  >> saved EMA ckpt, val miou 0.9549
+Ep736: tra-> Loss:0.202,Oa:0.996,Miou:0.985, time:3.8s
+Ep737: tra-> Loss:0.227,Oa:0.996,Miou:0.979, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9549
+Ep738: tra-> Loss:0.216,Oa:0.995,Miou:0.981, time:3.9s
+Ep739: tra-> Loss:0.237,Oa:0.992,Miou:0.973, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.9s
+Ep740: tra-> Loss:0.218,Oa:0.996,Miou:0.983, time:4.3s
+Ep741: tra-> Loss:0.251,Oa:0.995,Miou:0.978, val-> Loss:0.352,Oa:0.991,Miou:0.955,MiouEMA:0.9549, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9549
+Ep742: tra-> Loss:0.241,Oa:0.995,Miou:0.975, time:4.4s
+Ep743: tra-> Loss:0.181,Oa:0.994,Miou:0.982, val-> Loss:0.360,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9550
+Ep744: tra-> Loss:0.202,Oa:0.996,Miou:0.980, time:4.2s
+Ep745: tra-> Loss:0.221,Oa:0.995,Miou:0.981, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9550
+Ep746: tra-> Loss:0.199,Oa:0.996,Miou:0.984, time:4.2s
+Ep747: tra-> Loss:0.214,Oa:0.995,Miou:0.983, val-> Loss:0.359,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.7s
+Ep748: tra-> Loss:0.190,Oa:0.995,Miou:0.982, time:4.7s
+Ep749: tra-> Loss:0.209,Oa:0.995,Miou:0.979, val-> Loss:0.370,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:10.0s
+  >> saved EMA ckpt, val miou 0.9550
+Ep750: tra-> Loss:0.226,Oa:0.994,Miou:0.973, time:4.4s
+Ep751: tra-> Loss:0.201,Oa:0.996,Miou:0.984, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.4s
+Ep752: tra-> Loss:0.238,Oa:0.995,Miou:0.981, time:4.9s
+Ep753: tra-> Loss:0.220,Oa:0.995,Miou:0.980, val-> Loss:0.362,Oa:0.991,Miou:0.955,MiouEMA:0.9550, lr:1.00e-04,time:8.6s
+Ep754: tra-> Loss:0.215,Oa:0.994,Miou:0.977, time:3.8s
+Ep755: tra-> Loss:0.223,Oa:0.994,Miou:0.973, val-> Loss:0.359,Oa:0.991,Miou:0.955,MiouEMA:0.9550, lr:1.00e-04,time:9.2s
+  >> saved EMA ckpt, val miou 0.9550
+Ep756: tra-> Loss:0.194,Oa:0.995,Miou:0.981, time:4.1s
+Ep757: tra-> Loss:0.194,Oa:0.996,Miou:0.977, val-> Loss:0.360,Oa:0.991,Miou:0.955,MiouEMA:0.9550, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9550
+Ep758: tra-> Loss:0.192,Oa:0.995,Miou:0.979, time:4.3s
+Ep759: tra-> Loss:0.237,Oa:0.995,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:9.4s
+  >> saved EMA ckpt, val miou 0.9550
+Ep760: tra-> Loss:0.176,Oa:0.997,Miou:0.984, time:4.0s
+Ep761: tra-> Loss:0.207,Oa:0.996,Miou:0.985, val-> Loss:0.367,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:9.3s
+  >> saved EMA ckpt, val miou 0.9550
+Ep762: tra-> Loss:0.210,Oa:0.995,Miou:0.976, time:4.3s
+Ep763: tra-> Loss:0.206,Oa:0.995,Miou:0.980, val-> Loss:0.366,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.8s
+  >> saved EMA ckpt, val miou 0.9550
+Ep764: tra-> Loss:0.187,Oa:0.995,Miou:0.978, time:4.0s
+Ep765: tra-> Loss:0.189,Oa:0.995,Miou:0.982, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.7s
+  >> saved EMA ckpt, val miou 0.9550
+Ep766: tra-> Loss:0.205,Oa:0.994,Miou:0.978, time:3.8s
+Ep767: tra-> Loss:0.206,Oa:0.996,Miou:0.984, val-> Loss:0.376,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:8.9s
+Ep768: tra-> Loss:0.209,Oa:0.996,Miou:0.980, time:3.9s
+Ep769: tra-> Loss:0.229,Oa:0.994,Miou:0.975, val-> Loss:0.372,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:9.4s
+Ep770: tra-> Loss:0.229,Oa:0.995,Miou:0.979, time:4.3s
+Ep771: tra-> Loss:0.258,Oa:0.994,Miou:0.980, val-> Loss:0.362,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.1s
+Ep772: tra-> Loss:0.186,Oa:0.996,Miou:0.986, time:3.9s
+Ep773: tra-> Loss:0.221,Oa:0.995,Miou:0.979, val-> Loss:0.357,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:8.8s
+Ep774: tra-> Loss:0.205,Oa:0.995,Miou:0.977, time:4.3s
+Ep775: tra-> Loss:0.195,Oa:0.996,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.1s
+  >> saved EMA ckpt, val miou 0.9550
+Ep776: tra-> Loss:0.272,Oa:0.996,Miou:0.978, time:3.9s
+Ep777: tra-> Loss:0.184,Oa:0.995,Miou:0.986, val-> Loss:0.361,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:8.3s
+  >> saved EMA ckpt, val miou 0.9550
+Ep778: tra-> Loss:0.206,Oa:0.995,Miou:0.980, time:4.0s
+Ep779: tra-> Loss:0.233,Oa:0.994,Miou:0.971, val-> Loss:0.367,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:8.0s
+  >> saved EMA ckpt, val miou 0.9550
+Ep780: tra-> Loss:0.230,Oa:0.996,Miou:0.982, time:4.1s
+Ep781: tra-> Loss:0.245,Oa:0.996,Miou:0.981, val-> Loss:0.386,Oa:0.990,Miou:0.951,MiouEMA:0.9550, lr:1.00e-04,time:8.8s
+Ep782: tra-> Loss:0.188,Oa:0.994,Miou:0.980, time:4.3s
+Ep783: tra-> Loss:0.250,Oa:0.996,Miou:0.981, val-> Loss:0.372,Oa:0.990,Miou:0.954,MiouEMA:0.9550, lr:1.00e-04,time:9.6s
+Ep784: tra-> Loss:0.250,Oa:0.994,Miou:0.980, time:4.3s
+Ep785: tra-> Loss:0.196,Oa:0.995,Miou:0.981, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:9.3s
+Ep786: tra-> Loss:0.211,Oa:0.995,Miou:0.979, time:5.2s
+Ep787: tra-> Loss:0.189,Oa:0.996,Miou:0.985, val-> Loss:0.368,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:8.2s
+Ep788: tra-> Loss:0.231,Oa:0.995,Miou:0.980, time:3.9s
+Ep789: tra-> Loss:0.210,Oa:0.995,Miou:0.983, val-> Loss:0.364,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:7.9s
+Ep790: tra-> Loss:0.218,Oa:0.994,Miou:0.977, time:4.0s
+Ep791: tra-> Loss:0.204,Oa:0.996,Miou:0.983, val-> Loss:0.356,Oa:0.990,Miou:0.953,MiouEMA:0.9550, lr:1.00e-04,time:7.9s
+Ep792: tra-> Loss:0.213,Oa:0.994,Miou:0.978, time:4.4s
+Ep793: tra-> Loss:0.228,Oa:0.994,Miou:0.976, val-> Loss:0.358,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:7.8s
+Ep794: tra-> Loss:0.195,Oa:0.997,Miou:0.983, time:3.6s
+Ep795: tra-> Loss:0.211,Oa:0.995,Miou:0.979, val-> Loss:0.363,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.0s
+Ep796: tra-> Loss:0.183,Oa:0.996,Miou:0.985, time:3.7s
+Ep797: tra-> Loss:0.215,Oa:0.994,Miou:0.976, val-> Loss:0.374,Oa:0.990,Miou:0.953,MiouEMA:0.9549, lr:1.00e-04,time:8.5s
+Ep798: tra-> Loss:0.215,Oa:0.995,Miou:0.981, time:4.1s
+Ep799: tra-> Loss:0.203,Oa:0.996,Miou:0.983, val-> Loss:0.369,Oa:0.990,Miou:0.954,MiouEMA:0.9549, lr:1.00e-04,time:8.8s
+BEST val miou: 0.9550

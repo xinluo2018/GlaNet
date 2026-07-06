@@ -44,6 +44,7 @@ class metrics_segm:
         """
         oa = np.mean(self.cla_map == self.truth_map)
         return oa
+
     @property
     def iou(self, target_class_labels=None):
         """Intersection over Union (IoU) for a specific class
@@ -57,19 +58,7 @@ class metrics_segm:
         if self.mean_mode:
             iou_scores[f'labels_mean'] = np.mean(list(iou_scores.values()))
         return iou_scores
-    @property
-    def dice(self, target_class_labels=None):
-        """Dice Coefficient for a specific class
-        """        
-        if target_class_labels is None:
-            target_class_labels = self.class_labels    
-        dice_scores = {}
-        for c in target_class_labels:
-            intersection, union = self._get_intersection_union(c)
-            dice_scores[f'label_{c.item()}'] = (2 * intersection) / (union + intersection + 1e-7)  # avoid division by zero
-        if self.mean_mode:
-            dice_scores['labels_mean'] = np.mean(list(dice_scores.values()))
-        return dice_scores
+
     @property
     def precision(self, target_class_labels=None):
         """Precision for a specific class
@@ -102,7 +91,7 @@ class metrics_segm:
 
     @property
     def f1_score(self, target_class_labels=None):
-        """F1 Score for a specific class
+        """F1 Score for a specific class, the result equal to dice metric
         """        
         if target_class_labels is None:
             target_class_labels = self.class_labels    
@@ -136,22 +125,18 @@ def oa_binary(pred, truth, device='cpu'):
     oa = oa.mean()
     return oa
 
-
 def miou_binary(pred, truth, device='cpu'):
-    ''' des: calculate miou (2-class classification) for each batch
-        input: 
-            pred: (4D tensor: N*C*H*W) 
-            truth: (4D tensor: N*C*H*W)
-            device: 'cpu' or 'cuda'
-    '''
-    pred, truth = pred.to(device), truth.to(device)
-    inter = pred+truth
-    area_inter = torch.histc(inter.float(), bins=3, min=0, max=2)
-    area_inter = area_inter[0:3:2]
-    area_pred = torch.histc(pred.float(), bins=2, min=0, max=1)
-    area_truth = torch.histc(truth.float(), bins=2, min=0, max=1)
+    pred = pred.to(device).long()
+    truth = truth.to(device).long()
+    inter = pred + truth
+    counts = torch.bincount(inter.flatten(), minlength=3)    
+    area_inter = counts[0:3:2].float() # [TN, TP]    
+    area_pred = torch.bincount(pred.flatten(), minlength=2).float()
+    area_truth = torch.bincount(truth.flatten(), minlength=2).float()
     area_union = area_pred + area_truth - area_inter
-    iou = area_inter/(area_union+0.0000001)
+    iou = torch.zeros(2, device=device, dtype=torch.float32)    
+    valid_mask = area_union > 0
+    iou[valid_mask] = area_inter[valid_mask] / area_union[valid_mask]    
+    iou[~valid_mask] = 1.0 
     miou = iou.mean()
-    return miou 
-
+    return miou

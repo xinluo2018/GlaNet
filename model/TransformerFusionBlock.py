@@ -7,13 +7,13 @@ from torch.nn import init, Sequential
 
 
 class LearnableCoefficient(nn.Module):
+    """ Learnable Coefficient for feature fusion """
     def __init__(self):
         super(LearnableCoefficient, self).__init__()
         self.alpha = nn.Parameter(torch.FloatTensor([1.0]), requires_grad=True)
     def forward(self, x):
         out = x * self.alpha
         return out
-
 
 class LearnableWeights(nn.Module):
     def __init__(self):
@@ -234,7 +234,7 @@ class CrossTransformerBlock(nn.Module):
         self.coefficient8 = LearnableCoefficient()
 
     def forward(self, x):
-        rgb_fea_flat = x[0]
+        rgb_fea_flat = x[0]  
         ir_fea_flat = x[1]
         assert rgb_fea_flat.shape[0] == ir_fea_flat.shape[0]
         bs, nx, c = rgb_fea_flat.size()

@@ -35,12 +35,11 @@ import torch.nn.functional as F
 def conv(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, 1, 1),
-        # nn.BatchNorm2d(out_channels),
+        nn.BatchNorm2d(out_channels),
         # nn.GroupNorm(1, out_channels),  # group normalization  
         # GlobalBatchNorm2d(out_channels),  # global batch normalization      
         nn.ReLU(inplace=True)
         )
-
 
 class u2net(nn.Module):
     def __init__(self, num_bands_b1, num_bands_b2):

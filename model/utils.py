@@ -8,8 +8,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-
 class DiceLoss(nn.Module):
     """Dice Loss,适合二分类和多分类分割"""
     def __init__(self, smooth: float = 1.0):

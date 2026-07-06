@@ -1,7 +1,6 @@
 .vscode/
 __pycache__/
-data/dset
-data/result/
+data
 model/trained/
 github_repo 
 weights/

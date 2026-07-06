@@ -4,9 +4,11 @@ create: 2025.12.20, modify: 2026.3.2
 des: dataset and dataloader for deep learning tasks in remote sensing
 '''
 
+
 import cv2 
 import random
 import torch
+import json
 import rasterio as rio
 import numpy as np
 from utils.utils import get_lat
@@ -15,27 +17,30 @@ from torchvision.transforms import v2
 
 ## create related functions
 ## read scene
-def read_scenes(scene_paths, truth_paths, dem_paths):
-  paths_zip = zip(scene_paths, truth_paths, dem_paths)
-  scenes_arr = []
-  truths_arr = []
-  # scenes_lat = []
-  for scene_path, truth_path, dem_path in paths_zip:
-      ## 1. read scene and truth images
-      with rio.open(scene_path) as src:
-        scene_arr = src.read().transpose((1, 2, 0))  # (H, W, C)
-        # scene_lat = get_lat(src) 
-      with rio.open(truth_path) as truth_src:
-        truth_arr = truth_src.read(1)  # (H, W)
-      ## 2. read dem
-      with rio.open(dem_path) as dem_src:
-        dem_arr = dem_src.read(1)  # (H, W)
-      dem_arr = dem_arr[:, :, np.newaxis]  # expand to (H, W, 1)
-      scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
-      scenes_arr.append(scene_arr)
-      truths_arr.append(truth_arr)
-      # scenes_lat.append(scene_lat)
-  return scenes_arr, truths_arr
+def read_scenes(scene_paths, truth_paths, dem_paths, lat=False):
+    paths_zip = zip(scene_paths, truth_paths, dem_paths)
+    scenes_arr = []
+    truths_arr = []
+    scenes_lat = []
+    for scene_path, truth_path, dem_path in paths_zip:
+        ## 1. read scene and truth images
+        with rio.open(scene_path) as src:
+            scene_arr = src.read().transpose((1, 2, 0))  # (H, W, C)
+            scene_lat = round(get_lat(src))  # get scene latitude
+        with rio.open(truth_path) as truth_src:
+            truth_arr = truth_src.read(1)  # (H, W)
+        ## 2. read dem
+        with rio.open(dem_path) as dem_src:
+            dem_arr = dem_src.read(1)  # (H, W)
+        dem_arr = dem_arr[:, :, np.newaxis]  # expand to (H, W, 1)
+        scene_arr = np.concatenate([scene_arr, dem_arr], axis=-1)  # (H, W, C+1)
+        scenes_arr.append(scene_arr)
+        truths_arr.append(truth_arr)
+        scenes_lat.append(scene_lat)
+    if lat:
+        return scenes_arr, truths_arr, scenes_lat
+    else: 
+        return scenes_arr, truths_arr
 
 # ## build custom transforms
 # class GaussianNoise(v2.GaussianNoise):
@@ -93,13 +98,15 @@ class ScenePathSet(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.paths_scene)
 
+
 ### - Dataset definition
 class SceneArraySet(torch.utils.data.Dataset):
     def __init__(self, 
                  scenes_arr, 
                  truths_arr, 
                  patch_size=512, 
-                 transforms=None
+                 transforms=None,
+                 scenes_lat = None
                  ):
         '''
         des: build dataset using pre-loaded arrays
@@ -111,6 +118,7 @@ class SceneArraySet(torch.utils.data.Dataset):
         self.truths_arr = truths_arr
         self.patch_size = patch_size
         self.transforms = transforms
+        self.scenes_lat = scenes_lat
     def __getitem__(self, idx):
         scene_arr = self.scenes_arr[idx] # (H, W, C)
         truth_arr = self.truths_arr[idx]
@@ -120,15 +128,23 @@ class SceneArraySet(torch.utils.data.Dataset):
         if self.transforms is not None:
             scene_truth = self.transforms(scene_truth)  ## data augmentation
         patch_, ptruth_ = scene_truth[0:-1], scene_truth[-1:]  ## separate patch and truth        
+        if self.scenes_lat is not None:
+            return patch_, ptruth_, self.scenes_lat[idx]
         return patch_, ptruth_
+
     def __len__(self):
         return len(self.scenes_arr)  
     
+
 ### - Dataset definition
 class PatchPathSet(torch.utils.data.Dataset):
-    def __init__(self, paths_valset, transforms=None):
+    def __init__(self, paths_valset, transforms=None, path_valset_lat=None):
         self.paths_valset = paths_valset
         self.transforms = transforms
+        self.path_valset_lat = path_valset_lat
+        if path_valset_lat is not None:
+            self.lat_data = json.load(open(path_valset_lat, 'r'))
+
     def __getitem__(self, idx):
         ## load valset patch, patch: (H, W, C)
         patch_ptruth = torch.load(self.paths_valset[idx], weights_only=False) 
@@ -136,9 +152,13 @@ class PatchPathSet(torch.utils.data.Dataset):
             patch_ptruth = self.transforms(patch_ptruth)  ## data augmentation
         patch = patch_ptruth[0:-1] 
         ptruth = patch_ptruth[-1:] 
-        return patch, ptruth
+        if self.path_valset_lat is not None:
+            return patch, ptruth, self.lat_data[idx]
+        else:
+          return patch, ptruth
     def __len__(self):
         return len(self.paths_valset) 
+
 
 ### - Dataset definition 
 class SceneArraySet_scales(torch.utils.data.Dataset):
