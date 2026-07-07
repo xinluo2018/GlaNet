@@ -4,7 +4,6 @@ create: 2026.4.24
 des: UNet-like swin transformer model for segmentation task
 ref:(1) https://github.com/microsoft/Swin-Transformer/blob/main/models/swin_transformer_v2.py
     (2) https://github.com/amarbit/SwinTransformerFromScratch
-# UNDO: use einops to simplify tensor reshaping and permutation 
 '''
 
 import torch

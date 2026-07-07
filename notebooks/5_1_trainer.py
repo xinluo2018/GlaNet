@@ -18,7 +18,7 @@ from torchvision.transforms import v2
 from utils.data_aug import GaussianNoise
 from utils.dataloader import read_scenes 
 from utils.dataloader import SceneArraySet, PatchPathSet
-from model import u3net_cross_fusion_, u2net_timm, u3net_timm
+from model import u3net_cross_fusion, u2net_timm, u3net_timm, unet_timm
 from torchmetrics.classification import BinaryJaccardIndex, BinaryAccuracy
 
 ## 1. params 
@@ -28,8 +28,9 @@ learning_rate = 1e-4
 batch_size_tra = 8
 batch_size_val = 16 
 device = torch.device('cuda:1')   
-path_pretrained = 'model/trained/u3net_cross_fusion_09553.pth'   ## pretrained model path, if None, train from scratch
-# path_pretrained = 'model/trained/u3net_timm_5000.pth'             ## pretrained model path, if None, train from scratch
+# path_pretrained = 'model/trained/u3net_cross_fusion_.pth'   ## pretrained model path, if None, train from scratch
+path_pretrained = 'model/trained/ablation_module/u3net_timm_09537.pth'             ## pretrained model path, if None, train from scratch
+model_name = 'u3net_cross_fusion'  ## model name for saving
 
 ### traset
 paths_scene_tra, paths_truth_tra = config.paths_scene_tra, config.paths_truth_tra
@@ -42,14 +43,14 @@ print(f'vali patch {patch_size}: {len(paths_valset)}')
 path_valset_lat = f'data/dset/valset/patch_{patch_size}/patches_lat.json'  ## for model prediction
 
 ## 2. Read data
-scenes_arr, truths_arr, scenes_lat = read_scenes(paths_scene_tra, paths_truth_tra, paths_dem_tra, lat=True) 
+scenes_arr, truths_arr, scenes_lat = read_scenes(paths_scene_tra, paths_truth_tra, paths_dem_tra, lat=True)    # type: ignore
 
 ## 3. dataloader
 transforms_tra = v2.Compose([   
             v2.ToImage(),   
+            # v2.RandomHorizontalFlip(p=0.5),
+            # v2.RandomVerticalFlip(p=0.5),
             v2.RandomCrop(size=(patch_size, patch_size)),   
-            # v2.RandomHorizontalFlip(p=0.3),   
-            # v2.RandomVerticalFlip(p=0.3),   
             v2.RandomApply([v2.RandomRotation(degrees=15)], p=0.3),   # type:ignore
             GaussianNoise(mean = 0.0, sigma_max_img=0.1, sigma_max_dem=0, p=0.3)
             ]) 
@@ -66,19 +67,19 @@ tra_loader = torch.utils.data.DataLoader(tra_data, batch_size=batch_size_tra,
 val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size_val, num_workers=5)
 
 ## 4. model, loss and optimizer
+# model = unet_timm(# backbone_name='resnet34', 
+#                     backbone_name='efficientnet_b0',
+#                     pretrained=True)
 # model = u2net_timm(# backbone_name='resnet34', 
 #                     backbone_name='efficientnet_b0',
 #                     pretrained=True)
 # model = u3net_timm(# backbone_name='resnet34', 
 #                     backbone_name='efficientnet_b0',
 #                     pretrained=True)
-# model = u3net_timm_(# backbone_name='resnet34', 
-#                     backbone_name='efficientnet_b0',
-#                     pretrained=True)
-model = u3net_cross_fusion_(
+model = u3net_cross_fusion(
                     # backbone_name='resnet50', 
                     backbone_name='efficientnet_b0',
-                    pretrained=True)  
+                    pretrained=False)  
 
 # 4.1 load pretrained weights
 model_dict = model.state_dict() 
@@ -107,19 +108,6 @@ else:
 model_dict.update(pretrained_dict)
 model.load_state_dict(model_dict)
 
-# ## 4.2 freeze encoder weights after loading pretrained weights
-# encoders = [model.encoder_opt, model.encoder_nir, model.encoder_dem]
-# def freeze_encoders():
-#     for enc in encoders:
-#         for p in enc.parameters():
-#             p.requires_grad = False
-#         enc.eval()   # keep BN running stats fixed, disable dropout
-
-# freeze_encoders()
-# n_frozen = sum(p.numel() for enc in encoders for p in enc.parameters())
-# n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
-# print(f"frozen encoder params: {n_frozen:,} | trainable params: {n_train:,}")
-
 ### create loss and optimizer  
 bce_loss = nn.BCEWithLogitsLoss()
 
@@ -139,8 +127,8 @@ def dice_loss(outputs, target, smooth=1.0):
 
 def deep_bce_loss(outputs, target):
     """
-    outputs: (main, aux_opt, aux_nir, aux_dem) —— 网络返回的多输出
-    target:  [B,1,H,W] GT   
+    outputs: (main, aux_opt, aux_nir, aux_dem), the output contains multiple head ouput. 
+    target:  [B,1,H,W]    
     """
     main_logit, aux4_logit, aux3_logit, aux2_logit = outputs
     aux4_target = F.interpolate(target, size=aux4_logit.shape[2:],  mode='area')
@@ -151,7 +139,6 @@ def deep_bce_loss(outputs, target):
     aux3_loss = bce_loss(aux3_logit, aux3_target)
     aux2_loss = bce_loss(aux2_logit, aux2_target)
     loss = main_loss + (aux4_loss + aux3_loss + aux2_loss)/3
-    # loss = main_loss + aux4_loss 
     return loss
 
 def deep_bce_dice_loss(outputs, target):
@@ -165,7 +152,7 @@ optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)  ## all para
 def train_loops(model, loss_fn, 
                     optimizer, 
                     tra_loader, 
-                    val_loader,                     
+                    val_loader,  
                     epoches, 
                     device, 
                     lr_scheduler=None):
@@ -174,7 +161,7 @@ def train_loops(model, loss_fn,
     model = model.to(device)
     size_tra_loader = len(tra_loader)
     size_val_loader = len(val_loader)
-    best_miou = 0.9555
+    best_miou = 0.955
     epoches_i = []
     for epoch in range(epoches):
         start = time.time()
@@ -187,7 +174,7 @@ def train_loops(model, loss_fn,
         for x_batch, y_batch, lat_batch in tra_loader:
             x_batch, y_batch, lat_batch = x_batch.to(device), y_batch.to(device), lat_batch.to(device)
             optimizer.zero_grad()
-            preds = model(x_batch, lat=lat_batch)
+            preds = model(x_batch)
             loss = loss_fn(preds, y_batch)
             loss.backward()
             optimizer.step()
@@ -204,14 +191,11 @@ def train_loops(model, loss_fn,
         oa_val = BinaryAccuracy().to(device)
         miou_val = BinaryJaccardIndex().to(device)
         model.eval()
-        if (epoch+1) % 2 == 0: 
+        if epoch > 1000 and (epoch+1) % 2 == 0: 
             for x_batch, y_batch, lat_batch in val_loader:
                 x_batch, y_batch, lat_batch = x_batch.to(device), y_batch.to(device), lat_batch.to(device)
                 with torch.no_grad():
-                    preds = model(x_batch, lat=lat_batch)
-                    # if x.shape[2] > 256:  ### crop inner 256x256 for evaluation 
-                    #     pred = v2.functional.center_crop(pred, 256) 
-                    #     y = v2.functional.center_crop(y, 256)
+                    preds = model(x_batch)
                     loss = loss_fn(preds, y_batch)
                 pred = (F.sigmoid(preds[0]) > 0.5).float()
                 miou_val.update(pred, y_batch.long())
@@ -229,7 +213,7 @@ def train_loops(model, loss_fn,
             ## save the best model
             if miou_val_global.item() > best_miou:
                 best_miou = miou_val_global.item()       ## update best miou
-                torch.save(model.state_dict(), f'model/trained/u3net_cross_fusion_0{str(round(best_miou*10000))}.pth')
+                torch.save(model.state_dict(), f'model/trained/{model_name}_0{str(round(best_miou*10000))}.pth')
         else: 
             print(f'Ep{epoch}: tra-> Loss:{loss_tra_global:.3f},Oa:{oa_tra_global:.3f},Miou:{miou_tra_global:.3f}, \
                                 time:{time.time()-start:.1f}s')
@@ -242,7 +226,7 @@ def train_loops(model, loss_fn,
 
 if __name__ == '__main__':
     metrics = train_loops(model=model,  
-                    epoches=1000,   
+                    epoches=3000,   
                     # loss_fn=bce_loss,   
                     loss_fn = deep_bce_loss,
                     optimizer=optimizer,  
@@ -251,10 +235,9 @@ if __name__ == '__main__':
                     # lr_scheduler=lr_scheduler,   
                     device=device)
 
-    torch.save(model.state_dict(), 'model/trained/u3net_cross_fusion_.pth')
+    torch.save(model.state_dict(), f'model/trained/{model_name}_.pth')
     ## metrics saving
     path_metrics = f'training_metrics.csv'    
     metrics_df = pd.DataFrame(metrics)
     metrics_df.to_csv(path_metrics, index=False, sep=',')
-
 

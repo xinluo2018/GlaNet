@@ -1,11 +1,9 @@
 '''
 author: xin luo
-create: 2026.5.5
+create: 2026.7.6
 des: 
-(1) a tripple branch U-Net model with Swin Transformer fusion, better than unet
+(1) a tripple branch U-Net model with Visual Transformer and Swin Transformer fusion, better than unet
 (2) cbam attention improve the performance
-todo: 
-(1) cross vitransformer ~ cross swintransformer
 '''
 
 import torch
@@ -20,10 +18,16 @@ def conv(in_channels, out_channels,
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding),
         nn.BatchNorm2d(out_channels),
-        # nn.GroupNorm(1, out_channels),  # group normalization  
-        # GlobalBatchNorm2d(out_channels),  # global batch normalization      
-        nn.ReLU(inplace=True)
-        )
+        nn.ReLU(inplace=True))
+
+def dem_geometry(x_dem):
+    gy, gx = torch.gradient(x_dem, dim=(2, 3))
+    slope = torch.sqrt(gx**2 + gy**2 + 1e-8)
+    aspect = torch.atan2(gy, gx + 1e-8)
+    slope = slope / (slope.amax(dim=(2,3), keepdim=True) + 1e-8)
+    aspect_sin = torch.sin(aspect)     # 周期连续编码
+    aspect_cos = torch.cos(aspect)
+    return torch.cat([x_dem, slope, aspect_sin, aspect_cos], dim=1)  # [B,4,H,W]
 
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -122,7 +126,6 @@ class ssf_fusion_xyd(nn.Module):
         ch_dx = self.sigmoid(self.mlp_dx(self.maxpool(x)) + self.mlp_dx(self.avgpool(x)))
         ch_dy = self.sigmoid(self.mlp_dy(self.maxpool(y)) + self.mlp_dy(self.avgpool(y)))
         d_out = d + d * ch_dx + d * ch_dy
-
         return x_out, y_out, d_out
 
 
@@ -346,7 +349,7 @@ class CrossAttention_dem(nn.Module):
         self.cpb_mlp = nn.Sequential(nn.Linear(2, 512, bias=True),
                                      nn.ReLU(inplace=True),
                                      nn.Linear(512, num_heads, bias=False))
-        relative_coords_table = self._relative_coords_table(img_size)  # [1, 2*img_size-1, 2*img_size-1, 2]
+        relative_coords_table = self._relative_coords_table(img_size)     # [1, 2*img_size-1, 2*img_size-1, 2]
         self.register_buffer("relative_coords_table", relative_coords_table, persistent=False)
         relative_position_index = self._relative_position_index(img_size)
         self.register_buffer("relative_position_index", relative_position_index, persistent=False)
@@ -844,7 +847,6 @@ class Cross_ViTransformerBlock(nn.Module):
 
 class Cross_ViTransformerBlock_xyd(nn.Module):
     """ Swin Transformer Block with W-MSA and SW-MSA
-        top loss: 0.25; top miou: 0.950
     """
     def __init__(self, dim: int,   
                         num_heads: int,  
@@ -887,7 +889,6 @@ class Cross_ViTransformerBlock_xyd(nn.Module):
         self.mlp_y = MLP(dim, mlp_ratio)
         self.mlp_d = MLP(dim, mlp_ratio)
 
-
     def forward(self, x: torch.Tensor, y: torch.Tensor, d:torch.Tensor):
         '''x: [B, H*W, C], y: [B, H*W, C], z: [B, H*W, C]'''
         # Attention
@@ -904,21 +905,21 @@ class Cross_ViTransformerBlock_xyd(nn.Module):
         # skip connection
         # x
         x_att0 = wx[0] * self.attn_x(x_norm)
-        x_att1 = wx[0] * self.cross_attn_x_y(x_norm, y_norm)
-        x_att2 = wx[1] * self.cross_attn_x_d(x_norm, d_norm)
+        x_att1 = wx[1] * self.cross_attn_x_y(x_norm, y_norm)
+        x_att2 = wx[2] * self.cross_attn_x_d(x_norm, d_norm)
         x = shortcut_x + self.drop_path(x_att0 + x_att1 + x_att2)
 
         # y
         y_att0 = wy[0] * self.attn_y(y_norm)
-        y_att1 = wy[0] * self.cross_attn_y_x(y_norm, x_norm)
-        y_att2 = wy[1] * self.cross_attn_y_d(y_norm, d_norm)
+        y_att1 = wy[1] * self.cross_attn_y_x(y_norm, x_norm)
+        y_att2 = wy[2] * self.cross_attn_y_d(y_norm, d_norm)
         y = shortcut_y + self.drop_path(y_att0 + y_att1 + y_att2)
 
         # d
         d_att0 = wd[0] * self.attn_d(d_norm) 
-        d_att1 = wd[0] * self.cross_attn_d_x(d_norm, x_norm)
-        d_att2 = wd[1] * self.cross_attn_d_y(d_norm, y_norm)
-        d = shortcut_d + self.drop_path(d_att0 + d_att1 + d_att2) 
+        d_att1 = wd[1] * self.cross_attn_d_x(d_norm, x_norm)
+        d_att2 = wd[2] * self.cross_attn_d_y(d_norm, y_norm)
+        d = shortcut_d + self.drop_path(d_att0 + d_att1 + d_att2)
 
         # FFN
         x = x + self.drop_path(self.mlp_x(self.norm2_x(x)))    # [B, H*W, C]     
@@ -1072,12 +1073,12 @@ class Cross_SwinTransformerBlock_xyd(nn.Module):
         self.window_attn_x_x = WindowAttention(dim, window_size, num_heads)
         self.window_attn_y_y = WindowAttention(dim, window_size, num_heads)
         self.window_attn_d_d = WindowAttention(dim, window_size, num_heads) 
-        self.cross_window_attn_x_y = Cross_WindowAttention(dim, window_size, num_heads)
-        self.cross_window_attn_x_d = Cross_WindowAttention(dim, window_size, num_heads)
-        self.cross_window_attn_y_x = Cross_WindowAttention(dim, window_size, num_heads)
-        self.cross_window_attn_y_d = Cross_WindowAttention(dim, window_size, num_heads)
-        self.cross_window_attn_d_x = Cross_WindowAttention(dim, window_size, num_heads)
-        self.cross_window_attn_d_y = Cross_WindowAttention(dim, window_size, num_heads)
+        self.cross_window_attn_x_y = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
+        self.cross_window_attn_x_d = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
+        self.cross_window_attn_y_x = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
+        self.cross_window_attn_y_d = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
+        self.cross_window_attn_d_x = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
+        self.cross_window_attn_d_y = Cross_WindowAttention(dim, window_size, num_heads, drop_attn)
 
         self.norm2_x = nn.LayerNorm(dim)
         self.norm2_y = nn.LayerNorm(dim)
@@ -1182,9 +1183,9 @@ class Cross_SwinTransformerBlock_xyd(nn.Module):
     def forward(self, x: torch.Tensor, y: torch.Tensor, d: torch.Tensor):
         '''x: [B*n_window, window_h*window_w, C]'''
         # Attention
-        shortcut_x = x     ## [B, H*W, C]
-        shortcut_y = y     ## [B, H*W, C]
-        shortcut_d = d     ## [B, H*W, C]
+        shortcut_x = x      ## [B, H*W, C]
+        shortcut_y = y      ## [B, H*W, C]
+        shortcut_d = d      ## [B, H*W, C]
         x_norm = self.norm1_x(x)  
         y_norm = self.norm1_y(y)  
         d_norm = self.norm1_d(d)  
@@ -1197,14 +1198,17 @@ class Cross_SwinTransformerBlock_xyd(nn.Module):
         x_att1 = wx[1] * self._att_cross(x_norm, y_norm, self.cross_window_attn_x_y) 
         x_att2 = wx[2] * self._att_cross(x_norm, d_norm, self.cross_window_attn_x_d)  
         x = shortcut_x + self.drop_path(x_att0 + x_att1 + x_att2)
+
         y_att0 = wy[0] * self._att_self(y_norm, self.window_attn_y_y)
         y_att1 = wy[1] * self._att_cross(y_norm, x_norm, self.cross_window_attn_y_x) 
         y_att2 = wy[2] * self._att_cross(y_norm, d_norm, self.cross_window_attn_y_d)  
         y = shortcut_y + self.drop_path(y_att0 + y_att1 + y_att2)
+
         d_att0 = wd[0] * self._att_self(d_norm, self.window_attn_d_d)
         d_att1 = wd[1] * self._att_cross(d_norm, x_norm, self.cross_window_attn_d_x) 
         d_att2 = wd[2] * self._att_cross(d_norm, y_norm, self.cross_window_attn_d_y)  
         d = shortcut_d + self.drop_path(d_att0 + d_att1 + d_att2)        
+
         # # FFN
         x = x + self.drop_path(self.mlp_x(self.norm2_x(x)))    # [B, H*W, C]     
         y = y + self.drop_path(self.mlp_y(self.norm2_y(y)))    # [B, H*W, C]     
@@ -1315,21 +1319,14 @@ class Cross_Vit_Fusion(nn.Module):
         self.dim = dim
         self.img_size = img_size
         self.depth = depth
-        # linearly increasing stochastic-depth rate along the depth dimension
-        # dpr = [x.item() for x in torch.linspace(0, drop_path, depth)]
-        # separate blocks for each modality pair to allow specialization
         self.blocks = nn.ModuleList([
-            Cross_ViTransformerBlock_xyd(dim=dim,
-                                     num_heads=num_heads,
-                                     img_size=img_size,
-                                     mlp_ratio=mlp_ratio,
-                                     drop_attn=drop_attn,
-                                     drop_path=drop_path)
-                        for i in range(depth)])
-        # final per-branch normalization before fusion
-        self.norm_x = nn.LayerNorm(dim)
-        self.norm_y = nn.LayerNorm(dim)
-        self.norm_z = nn.LayerNorm(dim)
+                Cross_ViTransformerBlock_xyd(dim=dim,
+                                        num_heads=num_heads,
+                                        img_size=img_size,
+                                        mlp_ratio=mlp_ratio,
+                                        drop_attn=drop_attn,
+                                        drop_path=drop_path)
+                            for i in range(depth)])
 
     def forward(self, x, y, z):
         'x, y, z: [B, C, H, W], output: [B, 3*C, H, W]'
@@ -1339,9 +1336,9 @@ class Cross_Vit_Fusion(nn.Module):
         z = z.flatten(2).permute(0, 2, 1).contiguous()
         for blk in self.blocks:
             x, y, z = blk(x,y,z)        
-        x_fus = x.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]
-        y_fus = y.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]
-        z_fus = z.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]
+        x_fus = x.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]   
+        y_fus = y.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]    
+        z_fus = z.transpose(1, 2).view(B, C, H, W)  # [B, C, H, W]   
         return x_fus, y_fus, z_fus
 
 class Cross_SwinBasicLayer(nn.Module):
@@ -1424,12 +1421,11 @@ class u3net_cross_fusion(nn.Module):
     def __init__(self, backbone_name='resnet34',
                         pretrained=True):
         '''
-        num_bands_b1: number of bands for branch 1 (e.g., scene image)
-        num_bands_b2: number of bands for branch 2 (e.g., DEM)
         '''
         super().__init__()
         # self.k = nn.Parameter(torch.tensor(55.0/(8848+420)))      # m/degree
         # self.ref_phi = 45.0 
+        self.decode_channels = [96, 96, 96, 96, 48]    ##  from deep to shallow
         self.up2 = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)        
         ## encoder part 
         self.encoder_opt = timm.create_model(backbone_name,  
@@ -1444,13 +1440,8 @@ class u3net_cross_fusion(nn.Module):
                                         features_only=True,
                                         in_chans=1,
                                         pretrained=pretrained)
-
         self.out_channels = self.encoder_opt.feature_info.channels()   ## from shallow to deep  # type: ignore
         print("Output channels from encoder stages:", self.out_channels)
-        # self.decode_channels = [64, 64, 64, 64, 32]   ##  from deep to shallow
-        self.decode_channels = [96, 96, 96, 96, 48]   ##  from deep to shallow
-        # self.decode_channels = [128, 128, 128, 128, 64]  # decoder channels for each stage
-        # self.decode_channels = [128, 128, 128, 128, 64]  # decoder channels for each stage, same as encoder channels
         self.cross_layers_4 = Cross_Vit_Fusion(dim=self.out_channels[4],
                                             img_size=16,
                                             depth=4,
@@ -1458,18 +1449,11 @@ class u3net_cross_fusion(nn.Module):
                                             mlp_ratio=2,
                                             drop_attn=0.,
                                             drop_path=0.1)
-        # self.cross_layers_3 = Cross_Vit_Fusion(dim=self.out_channels[3],
-        #                                     img_size=32,
-        #                                     depth=4,
-        #                                     num_heads=4,
-        #                                     mlp_ratio=2,
-        #                                     drop_attn=0.1,
-        #                                     drop_path=0.2)
         self.cross_layers_3 = Cross_SwinBasicLayer(dim=self.out_channels[3],
                                             input_resolution=(32, 32),
                                             depth=2,
                                             num_heads=4,
-                                            window_size=16,
+                                            window_size=8,
                                             mlp_ratio=2,
                                             drop_attn=0.,
                                             drop_path=0.1)
@@ -1477,7 +1461,7 @@ class u3net_cross_fusion(nn.Module):
                                             input_resolution=(64, 64),
                                             depth=2,
                                             num_heads=4,
-                                            window_size=16, 
+                                            window_size=8, 
                                             mlp_ratio=2,
                                             drop_attn=0.,
                                             drop_path=0.1,
@@ -1495,12 +1479,9 @@ class u3net_cross_fusion(nn.Module):
                         nn.Conv2d(self.decode_channels[4], 1, kernel_size=3, padding=1),
                         )
         ## auxiliary outputs for deep supervision
-        # self.aux1 = nn.Conv2d(self.decode_channels[3], 1, 3, padding=1)  # auxiliary output at layer 1
-        # self.aux2 = nn.Conv2d(self.decode_channels[2], 1, 3, padding=1)  # auxiliary output at layer 2
-        self.aux2 = nn.Conv2d(self.out_channels[2]*3, 1, 3, padding=1)  # auxiliary output at layer 3
-        self.aux3 = nn.Conv2d(self.out_channels[3]*3, 1, 3, padding=1)  # auxiliary output at layer 3
-        self.aux4 = nn.Conv2d(self.out_channels[4]*3, 1, 3, padding=1)  # auxiliary output at layer 4
-
+        self.aux2 = nn.Conv2d(self.out_channels[2]*3, 1, 3, padding=1)
+        self.aux3 = nn.Conv2d(self.out_channels[3]*3, 1, 3, padding=1) 
+        self.aux4 = nn.Conv2d(self.out_channels[4]*3, 1, 3, padding=1) 
 
     def forward(self, x, lat=None):       ## input size: 7x256x256
         '''
@@ -1509,42 +1490,38 @@ class u3net_cross_fusion(nn.Module):
         x_opt = x[:, :3, :, :]
         x_nir = x[:, 3:6, :, :]
         x_dem = x[:, 6:, :, :]
-
         ## dem adjustment
-        if lat is not None:
-            pass     ## not implemented yet
-        
-            # adj = self.k * (torch.abs(lat) - self.ref_phi)   # lat: [B]
-            # x_dem = x_dem + adj.view(-1, 1, 1, 1)
+        # if lat is not None:
+        #     # pass     ## not implemented yet
+        #     adj = self.k * (torch.abs(lat) - self.ref_phi)   # lat: [B]
+        #     x_dem = x_dem + adj.view(-1, 1, 1, 1)
  
         ## encoder part
-        feas_opt = self.encoder_opt(x_opt)  # list of features from encoder branch 1
-        feas_nir = self.encoder_nir(x_nir)  # list of features from encoder branch 2
-        feas_dem = self.encoder_dem(x_dem)  # list of features from encoder branch 3
+        feas_opt = self.encoder_opt(x_opt)    # list of features from encoder branch 1
+        feas_nir = self.encoder_nir(x_nir)    # list of features from encoder branch 2
+        feas_dem = self.encoder_dem(x_dem)    # list of features from encoder branch 3
 
         # layer 4
-        fea_opt, fea_nir, fea_dem = feas_opt[-1], feas_nir[-1], feas_dem[-1]   #  [B, C, 16, 16]
-        fea_opt, fea_nir, fea_dem = self.cross_layers_4(fea_opt, fea_nir, fea_dem)   # cross attention fusion of features from three branches
+        fea_opt, fea_nir, fea_dem = feas_opt[-1], feas_nir[-1], feas_dem[-1]   #  [B, C, 16, 16] 
         aux4_out = self.aux4(torch.cat([fea_opt, fea_nir, fea_dem], dim=1))  # auxiliary output at layer 4
+        fea_opt, fea_nir, fea_dem = self.cross_layers_4(fea_opt, fea_nir, fea_dem)   # cross attention fusion of features from three branches
         fea_fus_4 = torch.cat([fea_opt, fea_nir, fea_dem], dim=1)  # concat features from three branches
         fea_fus_4 = self.DecoderBlocks[0](fea_fus_4)      # fused features through decoder    
-        # fea_fus_4 = self.decode4(fea_fus_4)
         fea_fus_4 = self.up2(fea_fus_4)  # upsample to match next skip connection
 
         # layer 3
         skip_fea_opt, skip_fea_nir, skip_fea_dem = feas_opt[-2], feas_nir[-2], feas_dem[-2]        
-        skip_fea_opt, skip_fea_nir, skip_fea_dem = self.cross_layers_3(skip_fea_opt, skip_fea_nir, skip_fea_dem)   # cross attention fusion of skip features
         aux3_out = self.aux3(torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1))  # auxiliary output at layer 4
+        skip_fea_opt, skip_fea_nir, skip_fea_dem = self.cross_layers_3(skip_fea_opt, skip_fea_nir, skip_fea_dem)   # cross attention fusion 
         fea_fus_3 = torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1)
         fea_fus_3 = torch.cat([fea_fus_4, fea_fus_3], dim=1)  # concat skip features
         fea_fus_3 = self.DecoderBlocks[1](fea_fus_3)  ## decode fused features
-        # fea_fus_3 = self.decode3(fea_fus_3)
         fea_fus_3 = self.up2(fea_fus_3)               ## upsample for next stage
 
         # layer 2:
         skip_fea_opt, skip_fea_nir, skip_fea_dem = feas_opt[-3], feas_nir[-3], feas_dem[-3]
-        skip_fea_opt, skip_fea_nir, skip_fea_dem = self.cross_layers_2(skip_fea_opt, skip_fea_nir, skip_fea_dem)     
         aux2_out = self.aux2(torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1))  # auxiliary output at layer 4
+        skip_fea_opt, skip_fea_nir, skip_fea_dem = self.cross_layers_2(skip_fea_opt, skip_fea_nir, skip_fea_dem)     
         fea_fus_2 = torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1)
         fea_fus_2 = torch.cat([fea_fus_3, fea_fus_2], dim=1)  # concat skip features
         fea_fus_2 = self.DecoderBlocks[2](fea_fus_2)  # decode fused features
@@ -1552,29 +1529,19 @@ class u3net_cross_fusion(nn.Module):
 
         # layer 1:
         skip_fea_opt, skip_fea_nir, skip_fea_dem = feas_opt[-4], feas_nir[-4], feas_dem[-4]
-        # fea_fus_1 = torch.cat([fea_fus_2, fea_fus_1], dim=1)  # concat skip features
-        # skip_fus_1 = self.cross_layers_1(skip_fea_opt, skip_fea_nir, skip_fea_dem)  # windowed cross-modal fusion -> [B, 3C, 128, 128]
-        # skip_fea_opt, skip_fea_nir, skip_fea_dem = self.ssf_fusion_1(skip_fea_opt, skip_fea_nir, skip_fea_dem)  # cross fusion of features at layer 1
         skip_fus_1 = torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1)
         fea_fus_1 = torch.cat([fea_fus_2, skip_fus_1], dim=1)  # concat skip features
         fea_fus_1 = self.DecoderBlocks[3](fea_fus_1)  # decode fused features
-        # fea_fus_1 = self.decode1(fea_fus_1)
-        # out1 = self.up4(out1)  # upsample to match input size  
         fea_fus_1 = self.up2(fea_fus_1)    ## upsample for next stage
 
         # layer 0:   
         skip_fea_opt, skip_fea_nir, skip_fea_dem = feas_opt[-5], feas_nir[-5], feas_dem[-5]
-        # fea_fus_0 = self.cross_layers_0(skip_fea_opt, skip_fea_nir, skip_fea_dem)  # cross attention fusion of skip features
-        # fea_fus_0 = torch.cat([fea_fus_1, fea_fus_0], dim=1)  # concat skip features
-        # skip_fea_opt, skip_fea_nir, skip_fea_dem = self.ssf_fusion_0(skip_fea_opt, skip_fea_nir, skip_fea_dem)  # cross fusion of features at layer 0
         fea_fus_0 = torch.cat([skip_fea_opt, skip_fea_nir, skip_fea_dem], dim=1)  # concat skip features
         fea_fus_0 = torch.cat([fea_fus_1, fea_fus_0], dim=1)  # concat skip features
         fea_fus_0 = self.DecoderBlocks[4](fea_fus_0)  # decode fused features
-        # fea_fus_0 = self.decode0(fea_fus_0)   
         fea_fus_0 = self.up2(fea_fus_0)  # upsample for next stage   
         logit = self.outp(fea_fus_0)    # 1x512x512    
         return logit, aux4_out, aux3_out, aux2_out # main output, auxiliary outputs for deep supervision
-        # return logit
 
 if __name__ == '__main__':
     model = u3net_cross_fusion(
@@ -1583,5 +1550,5 @@ if __name__ == '__main__':
                             pretrained=True)
     x = torch.randn(2, 7, 512, 512)  # batch_size=2, num_bands=7, H=W=512
     out = model(x)
-    print(out.shape)  # should be (2, 1, 512, 512)
+    print(out[0].shape)          ### should be (2, 1, 512, 512)
 
