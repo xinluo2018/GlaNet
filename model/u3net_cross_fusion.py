@@ -6,8 +6,8 @@ des:
 (2) cbam attention improve the performance
 '''
 
-import torch
 import timm
+import torch
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F

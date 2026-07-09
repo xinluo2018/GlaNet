@@ -18,7 +18,7 @@ from torchvision.transforms import v2
 from utils.data_aug import GaussianNoise
 from utils.dataloader import read_scenes 
 from utils.dataloader import SceneArraySet, PatchPathSet
-from model import u3net_cross_fusion, u2net_timm, u3net_timm, unet_timm
+from model import u3net_cross_fusion, u2net_timm, u3net_timm_, u3net_timm, unet_timm
 from torchmetrics.classification import BinaryJaccardIndex, BinaryAccuracy
 
 ## 1. params 
@@ -29,8 +29,8 @@ batch_size_tra = 8
 batch_size_val = 16 
 device = torch.device('cuda:1')   
 # path_pretrained = 'model/trained/u3net_cross_fusion_.pth'   ## pretrained model path, if None, train from scratch
-path_pretrained = 'model/trained/ablation_module/u3net_timm_09537.pth'             ## pretrained model path, if None, train from scratch
-model_name = 'u3net_cross_fusion'  ## model name for saving
+# path_pretrained = 'model/trained/ablation_module/u3net_timm_09537.pth'             ## pretrained model path, if None, train from scratch
+model_name = 'u3net_timm_rgb_remove'  ## model name for saving
 
 ### traset
 paths_scene_tra, paths_truth_tra = config.paths_scene_tra, config.paths_truth_tra
@@ -76,37 +76,41 @@ val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size_val, nu
 # model = u3net_timm(# backbone_name='resnet34', 
 #                     backbone_name='efficientnet_b0',
 #                     pretrained=True)
-model = u3net_cross_fusion(
-                    # backbone_name='resnet50', 
+model = u3net_timm_(
+                    # backbone_name='resnet34', 
                     backbone_name='efficientnet_b0',
-                    pretrained=False)  
+                    pretrained=True)
+# model = u3net_cross_fusion(
+#                     # backbone_name='resnet50', 
+#                     backbone_name='efficientnet_b0',
+#                     pretrained=False)  
 
-# 4.1 load pretrained weights
-model_dict = model.state_dict() 
-model_checkpoint = torch.load(path_pretrained, map_location='cpu') 
-pretrained_dict = {
-    k: v for k, v in model_checkpoint.items() 
-    if k in model_dict and v.shape == model_dict[k].shape}
-discarded_keys = set(model_checkpoint.keys()) - set(pretrained_dict.keys())
-if discarded_keys:
-    print(f"unmatched parameters and are discarded:")
-    print('='*50)
-    for k in sorted(discarded_keys):
-        print(f"  - {k}")
-    print('='*50)
-else:
-    print('no discarded parameters')
-newly_keys = set(model_dict.keys()) - set(pretrained_dict.keys())
-if newly_keys:
-    print(f"newly added parameters and are randomly initialized:")
-    print('='*50)
-    for k in sorted(newly_keys):
-        print(f"  - {k}")
-    print('='*50)
-else:
-    print("no newly added parameters")
-model_dict.update(pretrained_dict)
-model.load_state_dict(model_dict)
+# # 4.1 load pretrained weights
+# model_dict = model.state_dict() 
+# model_checkpoint = torch.load(path_pretrained, map_location='cpu') 
+# pretrained_dict = {
+#     k: v for k, v in model_checkpoint.items() 
+#     if k in model_dict and v.shape == model_dict[k].shape}
+# discarded_keys = set(model_checkpoint.keys()) - set(pretrained_dict.keys())
+# if discarded_keys:
+#     print(f"unmatched parameters and are discarded:")
+#     print('='*50)
+#     for k in sorted(discarded_keys):
+#         print(f"  - {k}")
+#     print('='*50)
+# else:
+#     print('no discarded parameters')
+# newly_keys = set(model_dict.keys()) - set(pretrained_dict.keys())
+# if newly_keys:
+#     print(f"newly added parameters and are randomly initialized:")
+#     print('='*50)
+#     for k in sorted(newly_keys):
+#         print(f"  - {k}")
+#     print('='*50)
+# else:
+#     print("no newly added parameters")
+# model_dict.update(pretrained_dict)
+# model.load_state_dict(model_dict)
 
 ### create loss and optimizer  
 bce_loss = nn.BCEWithLogitsLoss()
@@ -161,7 +165,7 @@ def train_loops(model, loss_fn,
     model = model.to(device)
     size_tra_loader = len(tra_loader)
     size_val_loader = len(val_loader)
-    best_miou = 0.955
+    best_miou = 0.80
     epoches_i = []
     for epoch in range(epoches):
         start = time.time()
@@ -213,7 +217,7 @@ def train_loops(model, loss_fn,
             ## save the best model
             if miou_val_global.item() > best_miou:
                 best_miou = miou_val_global.item()       ## update best miou
-                torch.save(model.state_dict(), f'model/trained/{model_name}_0{str(round(best_miou*10000))}.pth')
+                torch.save(model.state_dict(), f'model/trained/ablation_data/{model_name}_0{str(round(best_miou*10000))}.pth')
         else: 
             print(f'Ep{epoch}: tra-> Loss:{loss_tra_global:.3f},Oa:{oa_tra_global:.3f},Miou:{miou_tra_global:.3f}, \
                                 time:{time.time()-start:.1f}s')
@@ -235,7 +239,7 @@ if __name__ == '__main__':
                     # lr_scheduler=lr_scheduler,   
                     device=device)
 
-    torch.save(model.state_dict(), f'model/trained/{model_name}_.pth')
+    torch.save(model.state_dict(), f'model/trained/ablation_data/{model_name}_.pth')
     ## metrics saving
     path_metrics = f'training_metrics.csv'    
     metrics_df = pd.DataFrame(metrics)
