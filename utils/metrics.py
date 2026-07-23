@@ -59,6 +59,23 @@ class metrics_segm:
             iou_scores[f'labels_mean'] = np.mean(list(iou_scores.values()))
         return iou_scores
 
+    @property 
+    def kappa(self):
+        """Cohen's Kappa for binary segmentation
+            kappa = (po - pe) / (1 - pe)
+            po: observed agreement (i.e. OA)
+            pe: expected agreement by chance
+        """
+        total = self.cla_map.size
+        po = np.sum(self.cla_map == self.truth_map) / total
+        pe = 0.0
+        for c in self.class_labels:
+            p_pred_c = np.sum(self.cla_map == c) / total
+            p_true_c = np.sum(self.truth_map == c) / total
+            pe += p_pred_c * p_true_c
+        kappa = (po - pe) / (1 - pe + 1e-7)  # avoid division by zero
+        return kappa
+
     @property
     def precision(self, target_class_labels=None):
         """Precision for a specific class

@@ -5,7 +5,7 @@ des: training script for swin-based model
 '''
 
 import sys 
-sys.path.append('/home/ps/Develop/dev-luo/GlaNet')  ## add the current working directory to sys.path for module import
+sys.path.append('/home/xin/Developer-luo/GlaNet')  ## add the current working directory to sys.path for module import
 import time
 import torch
 import pandas as pd
@@ -18,7 +18,7 @@ from torchvision.transforms import v2
 from utils.data_aug import GaussianNoise
 from utils.dataloader import read_scenes 
 from utils.dataloader import SceneArraySet, PatchPathSet
-from model import u3net_cross_fusion, u2net_timm, u3net_timm_, u3net_timm, unet_timm
+from model import u3net_cross_fusion, u2net_timm, u3net_timm, unet_timm
 from torchmetrics.classification import BinaryJaccardIndex, BinaryAccuracy
 
 ## 1. params 
@@ -27,7 +27,7 @@ patch_resize = None  ## patch resize setting
 learning_rate = 1e-4
 batch_size_tra = 8
 batch_size_val = 16 
-device = torch.device('cuda:1')   
+device = torch.device('cuda:0')   
 # path_pretrained = 'model/trained/u3net_cross_fusion_.pth'   ## pretrained model path, if None, train from scratch
 # path_pretrained = 'model/trained/ablation_module/u3net_timm_09537.pth'             ## pretrained model path, if None, train from scratch
 model_name = 'u3net_timm_rgb_remove'  ## model name for saving
@@ -76,14 +76,10 @@ val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size_val, nu
 # model = u3net_timm(# backbone_name='resnet34', 
 #                     backbone_name='efficientnet_b0',
 #                     pretrained=True)
-model = u3net_timm_(
-                    # backbone_name='resnet34', 
+model = u3net_cross_fusion(
+                    # backbone_name='resnet50', 
                     backbone_name='efficientnet_b0',
-                    pretrained=True)
-# model = u3net_cross_fusion(
-#                     # backbone_name='resnet50', 
-#                     backbone_name='efficientnet_b0',
-#                     pretrained=False)  
+                    pretrained=False)  
 
 # # 4.1 load pretrained weights
 # model_dict = model.state_dict() 
